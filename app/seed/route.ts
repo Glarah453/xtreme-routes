@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import postgres from 'postgres';
 // import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 import seed_creates_tables from '../db/seed_creacion_tablas';
-import { seed_data_regiones, seed_data_comunas ] from '../db/seed_data_db_1';
+import { seed_data_regiones, seed_data_comunas } from '../db/seed_data_db_1';
 
 import {
   seed_data_categorias,
