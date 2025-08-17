@@ -21,7 +21,7 @@ import {
 import {
   createUserProcedures,
   createSesionProcedures,
-  createsSectorProcedures,
+  createSectorProcedures,
   createRutaProcedures,
   createPostProcedures,
   createComentarioProcedures,
