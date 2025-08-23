@@ -33,8 +33,8 @@ export async function createUserProcedures() {
         -- END IF;
 
         -- Insertar el usuario y devolver el ID
-        INSERT INTO usuarios (displayname, email, fecha_nacimiento, photoURL, comuna_id, createdIt)
-        VALUES (p_nombre, p_email, p_fecha_nacimiento, p_photoURL, p_comuna_id, CURRENT_TIMESTAMP)
+        INSERT INTO usuarios (displayname, email, rol, fecha_nacimiento, photoURL, comuna_id, createdIt)
+        VALUES (p_nombre, p_email, 'usuario', p_fecha_nacimiento, p_photoURL, p_comuna_id, CURRENT_TIMESTAMP)
         RETURNING id INTO p_usuario_id;
     EXCEPTION
         WHEN OTHERS THEN
@@ -118,6 +118,7 @@ export async function createUserProcedures() {
     END;
     $$;
   `;
+  console.log("Creacion Procedimientos Usuarios ..... OK");
 }
 
 //========================================================================================================================================================
@@ -206,6 +207,7 @@ export async function createSesionProcedures() {
     END;
     $$;
   `;
+  console.log("Creacion Procedimientos Sesion ..... OK");
 }
 
 
@@ -224,7 +226,6 @@ export async function createSectorProcedures() {
     LANGUAGE plpgsql
     AS $$
     BEGIN
-
       -- Validar que no exista el nombre en un sector existente
       if exists (
         select 1 from sectores
@@ -268,27 +269,26 @@ export async function createSectorProcedures() {
     LANGUAGE plpgsql
     AS $$
     BEGIN
-
         -- Validar que el post existe
         IF NOT EXISTS (SELECT 1 FROM posts WHERE id = p_post_id) THEN
             RAISE EXCEPTION 'Post no encontrado: %', p_post_id;
         END IF;
 
-      -- Validar que no exista el nombre en un sector existente
-      if exists (
-        select 1 from sectores
-        where nombre = p_nombre
-      ) then
-        raise exception 'El Nombre ya existe en un Sector';
-      end if;
+        -- Validar que no exista el nombre en un sector existente
+        if exists (
+          select 1 from sectores
+          where nombre = p_nombre
+        ) then
+          raise exception 'El Nombre ya existe en un Sector';
+        end if;
 
-      -- Validar que no exista la descripcion en un sector existente
-      if exists (
-        select 1 from sectores
-        where descripcion = p_descripcion
-      ) then
-        raise exception 'La Descripcion ya existe en un Sector';
-      end if;
+        -- Validar que no exista la descripcion en un sector existente
+        if exists (
+          select 1 from sectores
+          where descripcion = p_descripcion
+        ) then
+          raise exception 'La Descripcion ya existe en un Sector';
+        end if;
 
         -- Insertar el sector con usuario_id
         INSERT INTO sectores (nombre, descripcion, image, latitud, longitud, usuario_id)
@@ -385,6 +385,8 @@ export async function createSectorProcedures() {
     )
     LANGUAGE plpgsql
     AS $$
+    DECLARE
+      v_post_usuario_id BIGINT;
     BEGIN
         IF NOT EXISTS (SELECT 1 FROM sectores WHERE id = p_sector_id) THEN
             RAISE EXCEPTION 'Sector no encontrado: %', p_sector_id;
@@ -414,6 +416,7 @@ export async function createSectorProcedures() {
     END;
     $$;
   `;
+  console.log("Creacion Procedimientos Sector ..... OK");
 }
 
 //========================================================================================================================================================
@@ -715,6 +718,7 @@ export async function createRutaProcedures() {
     END;
     $$;
   `;
+  console.log("Creacion Procedimientos Rutas ..... OK");
 }
 
 
@@ -973,6 +977,7 @@ export async function createPostProcedures() {
     END;
     $$
   `;
+  console.log("Creacion Procedimientos Post ..... OK");
 }
 
 
@@ -1108,6 +1113,7 @@ export async function createComentarioProcedures() {
     END;
     $$;
   `;
+  console.log("Creacion Procedimientos Comentarios ..... OK");
 }
 
 //========================================================================================================================================================
@@ -1207,6 +1213,7 @@ export async function createValoracionProcedures() {
     END;
     $$;
   `;
+  console.log("Creacion Procedimientos Valoraciones ..... OK");
 }
 
 //========================================================================================================================================================
@@ -1266,6 +1273,7 @@ export async function createMeGustaProcedures() {
     END;
     $$;
   `;
+  console.log("Creacion Procedimientos Megusta ..... OK");
 }
 
 

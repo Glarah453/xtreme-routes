@@ -281,7 +281,7 @@ DECLARE
 BEGIN
     -- Crear ruta en post existente
     CALL crear_ruta_en_post(
-		p_post_id := 4,
+		    p_post_id := 4,
         p_usuario_id := 1,
         p_nombre := 'Ruta Principal 23',
         p_descripcion := 'Ruta de trekking 23',
@@ -312,7 +312,7 @@ $$;
 DO $$
 BEGIN
     CALL actualizar_ruta(
-		p_ruta_id := 7,
+		    p_ruta_id := 7,
         p_usuario_id := 1,
         p_nombre := 'Ruta Principal 22',
         p_descripcion := 'Ruta de trekking 22',

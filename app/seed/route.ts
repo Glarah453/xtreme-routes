@@ -1,8 +1,11 @@
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 import postgres from 'postgres';
 // import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 import { seed_creates_tables } from '../../db/seed_creacion_tablas';
-import { seed_data_regiones, seed_data_comunas } from '../../db/seed_data_db_1';
+import { 
+  seed_data_regiones, 
+  seed_data_comunas
+} from '../../db/seed_data_db_1';
 
 import {
   seed_data_categorias,
@@ -32,49 +35,53 @@ import {
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
-//-------------------------------------- Tabla Regiones
-// async function seed_regiones() {
-//   // await sql`create extension if not exists "uuid-ossp"`;
-//   await sql`
-//     create table if not exists regiones (
-//       id BIGSERIAL not null,
-//       nombre varchar(255) not null,
-//       latitud NUMERIC(18,15) not null,
-//       longitud NUMERIC(18,15) not null,
-//       constraint pk_region primary key (id)
-//     );
-//   `;
-//
-//   const insertedregiones = await promise.all(
-//     regiones.map(async (region) => {
-//       return sql`
-//         insert into regiones (id, nombre, latitud, longitud)
-//         values (${region.id}, ${region.nombre}, ${region.latitud}, ${region.latitud})
-//         on conflict (id) do nothing;
-//       `;
-//     }),
-//   );
-//
-//   return insertedregiones;
-// }
-
 
 export async function GET() {
   try {
     const result = await sql.begin((sql) => [
       seed_creates_tables(),
+    ]);
+
+    const result1 = await sql.begin((sql) => [
+      seed_data_regiones(),
       seed_data_categorias(),
+    ]);
+
+    const result2 = await sql.begin((sql) => [
+      seed_data_comunas(),
       seed_data_subcategorias(),
+    ]);
+
+    const result3 = await sql.begin((sql) => [
       seed_data_dificultades_escalada(),
+    ]);
+
+    const result4 = await sql.begin((sql) => [
       seed_data_dificultades_mtb(),
+    ]);
+
+    const result5 = await sql.begin((sql) => [
       seed_data_dificultades_trekking(),
+    ]);
+
+    const result6 = await sql.begin((sql) => [
       seed_data_subcategorias_dificultades_escalada(),
+    ]);
+
+    const result7 = await sql.begin((sql) => [
       seed_data_subcategorias_dificultades_mtb(),
+    ]);
+
+    const result8 = await sql.begin((sql) => [
       seed_data_subcategorias_dificultades_trekking(),
+    ]);
+
+    const result9 = await sql.begin((sql) => [
       createUserProcedures(),
-      createPostProcedures(),
+      createSesionProcedures(),
       createSectorProcedures(),
       createRutaProcedures(),
+      createPostProcedures(),
       createComentarioProcedures(),
       createValoracionProcedures(),
       createMeGustaProcedures(),

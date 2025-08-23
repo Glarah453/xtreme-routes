@@ -23,6 +23,7 @@ export async function seed_data_regiones() {
       (15, 'Región Aysén del General Carlos Ibáñez del Campo', -45.5712, -72.0685),
       (16, 'Región de Magallanes y Antártica Chilena', -53.1625, -70.908056);
   `;
+  console.log("ingreso de datos Regiones ..... OK");
 }
 
 
@@ -375,6 +376,6 @@ export async function seed_data_comunas() {
       (344, 'Natales', 16),
       (345, 'Torres del Paine', 16),
       (346, 'Cabildo', 6);
-
   `;
+  console.log("ingreso de datos Comunas ..... OK");
 }

@@ -1,5 +1,6 @@
 import AcmeLogo from '@/app/ui/acme-logo';
 import LoginForm from '@/app/ui/login-form';
+// import AuthForm from '@/app/ui/Auth-form';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 
@@ -19,6 +20,7 @@ export default function LoginPage() {
         </div>
         <Suspense>
           <LoginForm />
+          {/* <AuthForm /> */}
         </Suspense>
       </div>
     </main>

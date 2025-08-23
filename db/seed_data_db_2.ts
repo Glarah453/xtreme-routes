@@ -9,6 +9,7 @@ export async function seed_data_categorias() {
       (2,'Mountain Bike'),
       (3,'Trekking');
   `;
+  console.log("ingreso de datos Categorias ..... OK");
 }
 
 export async function seed_data_subcategorias() {
@@ -27,7 +28,6 @@ export async function seed_data_subcategorias() {
       (11,'Urbana', 'Se practica en los grandes edificios de las ciudades. Suele hacerse en solitario y suele ser ilegal en muchos países.',1),
       (12,'Adherencia', 'Se realiza en las paredes no completamente verticales que no disponen de presas de pie y de mano.',1),
       (13,'Vía ferrata', 'es un itinerario tanto vertical como horizontal (franqueo) equipado con diverso material: clavos, grapas, presas, pasamanos, cadenas, puentes colgantes y tirolinas, que permiten el llegar con seguridad a zonas de difícil acceso para senderistas o no habituados a la escalada. La seguridad corre a cargo de un cable de acero instalado en toda la vía y el arnés provisto de un disipador de energía y mosquetones especiales de vía ferrata (marcados con una k) que aseguran en caso de caída.',1),
-      
       (14,'MTB - XCO o Cross Country', 'Carreras en circuitos con subidas, bajadas y terrenos técnicos',2),
       (15,'MTB - Enduro', 'Combinación de subidas (no cronometradas) y bajadas cronometradas.',2),
       (16,'MTB - Downhill', 'Bajadas extremadamente técnicas y rápidas, con saltos y obstáculos.',2),
@@ -39,7 +39,6 @@ export async function seed_data_subcategorias() {
       (22,'Fat Bike', 'Bicicletas con ruedas muy anchas para nieve o arena.', 2),
       (23,'Pumptrack', 'Circuito de bombeo (sin pedalear) con rollers y peraltes', 2),
       (24,'BMX', 'Carreras en pistas cortas con saltos o Trucos en rampas, calles o parques',2),
-      
       (25,'Clásico (Senderismo Recreativo)', 'Caminatas por senderos señalizados, generalmente de corta a media distancia, en entornos naturales como bosques, montañas bajas o parques.', 3),
       (26,'Baja/Media Montaña (Hiking)', 'Ascensos a montañas o cerros con desniveles moderados, sin necesidad de equipo técnico de escalada.', 3),
       (27,'Alta Montaña (High-Altitude Trekking)', 'Caminatas en zonas por encima de 3,500 msnm, donde la altitud y el clima extremo son factores clave.', 3),
@@ -51,13 +50,14 @@ export async function seed_data_subcategorias() {
       (33,'Invernal (Nieve/Hielo)', 'Senderismo en condiciones de nieve, usando raquetas, esquís de travesía o crampones.', 3),
       (34,'Acuático (Canyoning/River Trekking)', 'Combinación de senderismo, natación y rappel en cañones o ríos.', 3);
   `;
+  console.log("ingreso de datos Subcategorias ..... OK");
 }
 
 export async function seed_data_dificultades_escalada() {
-  await sql`
-    ---------------------Dificultades Escalada
+    // ---------------------Dificultades Escalada
 
-    -- Dificultades Yosemite Decimal System (YDS)
+    // -- Dificultades Yosemite Decimal System (YDS)
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('5.0', 'Yosemite'), ('5.1', 'Yosemite'), ('5.2', 'Yosemite'), ('5.3', 'Yosemite'), ('5.4', 'Yosemite'),
       ('5.5', 'Yosemite'), ('5.6', 'Yosemite'), ('5.7', 'Yosemite'), ('5.8', 'Yosemite'), ('5.9', 'Yosemite'),
@@ -67,8 +67,10 @@ export async function seed_data_dificultades_escalada() {
       ('5.13a', 'Yosemite'), ('5.13b', 'Yosemite'), ('5.13c', 'Yosemite'), ('5.13d', 'Yosemite'),
       ('5.14a', 'Yosemite'), ('5.14b', 'Yosemite'), ('5.14c', 'Yosemite'), ('5.14d', 'Yosemite'),
       ('5.15a', 'Yosemite'), ('5.15b', 'Yosemite'), ('5.15c', 'Yosemite'), ('5.15d', 'Yosemite');
+  `;
 
-    -- Dificultades Francesas
+    // -- Dificultades Francesas
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('1', 'Francesa'), ('2', 'Francesa'), ('3', 'Francesa'),
       ('4a', 'Francesa'), ('4b', 'Francesa'), ('4c', 'Francesa'),
@@ -77,15 +79,19 @@ export async function seed_data_dificultades_escalada() {
       ('7a', 'Francesa'), ('7a+', 'Francesa'), ('7b', 'Francesa'), ('7b+', 'Francesa'), ('7c', 'Francesa'), ('7c+', 'Francesa'),
       ('8a', 'Francesa'), ('8a+', 'Francesa'), ('8b', 'Francesa'), ('8b+', 'Francesa'), ('8c', 'Francesa'), ('8c+', 'Francesa'),
       ('9a', 'Francesa'), ('9a+', 'Francesa'), ('9b', 'Francesa'), ('9b+', 'Francesa'), ('9c', 'Francesa'), ('9c+', 'Francesa');
+  `;
 
-    -- Dificultades V-Grade
+    // -- Dificultades V-Grade
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('V0', 'V-Grade'), ('V1', 'V-Grade'), ('V2', 'V-Grade'), ('V3', 'V-Grade'), ('V4', 'V-Grade'),
       ('V5', 'V-Grade'), ('V6', 'V-Grade'), ('V7', 'V-Grade'), ('V8', 'V-Grade'), ('V9', 'V-Grade'),
       ('V10', 'V-Grade'), ('V11', 'V-Grade'), ('V12', 'V-Grade'), ('V13', 'V-Grade'), ('V14', 'V-Grade'),
       ('V15', 'V-Grade'), ('V16', 'V-Grade'), ('V17', 'V-Grade'), ('V18', 'V-Grade'), ('V19', 'V-Grade');
+  `;
 
-    -- Dificultades Fontainebleau
+    // -- Dificultades Fontainebleau
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('1', 'Fontainebleau'), ('2', 'Fontainebleau'), ('3', 'Fontainebleau'),
       ('4', 'Fontainebleau'), ('4+', 'Fontainebleau'),
@@ -93,9 +99,11 @@ export async function seed_data_dificultades_escalada() {
       ('6a', 'Fontainebleau'), ('6a+', 'Fontainebleau'), ('6b', 'Fontainebleau'), ('6b+', 'Fontainebleau'), ('6c', 'Fontainebleau'), ('6c+', 'Fontainebleau'),
       ('7a', 'Fontainebleau'), ('7a+', 'Fontainebleau'), ('7b', 'Fontainebleau'), ('7b+', 'Fontainebleau'), ('7c', 'Fontainebleau'), ('7c+', 'Fontainebleau'),
       ('8a', 'Fontainebleau'), ('8a+', 'Fontainebleau'), ('8b', 'Fontainebleau'), ('8b+', 'Fontainebleau'), ('8c', 'Fontainebleau'), ('8c+', 'Fontainebleau');
+  `;
 
 
-    -- Dificultades UIAA (Unión Internacional de Asociaciones de Alpinismo)
+    // -- Dificultades UIAA (Unión Internacional de Asociaciones de Alpinismo)
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('I', 'UIAA'), ('II', 'UIAA'), ('III', 'UIAA'), ('IV', 'UIAA'),
       ('V-', 'UIAA'), ('V', 'UIAA'), ('V+', 'UIAA'),
@@ -106,18 +114,22 @@ export async function seed_data_dificultades_escalada() {
       ('X-', 'UIAA'), ('X', 'UIAA'), ('X+', 'UIAA'),
       ('XI-', 'UIAA'), ('XI', 'UIAA'), ('XI+', 'UIAA'),
       ('XII-', 'UIAA'), ('XII', 'UIAA'), ('XII+', 'UIAA');
+  `;
 
 
-    -- Dificultades British (Tradicional y Técnica)
+    // -- Dificultades British (Tradicional y Técnica)
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('M', 'British'), ('D', 'British'), ('VD', 'British'), ('HVD', 'British'), ('S', 'British'),
       ('HS', 'British'), ('VS', 'British'), ('HVS', 'British'),
       ('E1', 'British'), ('E2', 'British'), ('E3', 'British'), ('E4', 'British'), ('E5', 'British'),
       ('E6', 'British'), ('E7', 'British'), ('E8', 'British'), ('E9', 'British'), ('E10', 'British'),
       ('E11', 'British'), ('E12', 'British');
+  `;
 
 
-    -- Dificultades Alpine Grade
+    // -- Dificultades Alpine Grade
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES 
       ('F', 'Alpine Grade'),
       ('PD', 'Alpine Grade'),
@@ -128,8 +140,10 @@ export async function seed_data_dificultades_escalada() {
       ('ED2', 'Alpine Grade'),
       ('ED3', 'Alpine Grade'),
       ('ABO', 'Alpine Grade');
+  `;
 
-    -- Dificultades Alpine Ice Grade
+    // -- Dificultades Alpine Ice Grade
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES 
       ('AI1', 'Alpine Ice Grade'),
       ('AI2', 'Alpine Ice Grade'),
@@ -138,9 +152,11 @@ export async function seed_data_dificultades_escalada() {
       ('AI5', 'Alpine Ice Grade'),
       ('AI6', 'Alpine Ice Grade'),
       ('AI7', 'Alpine Ice Grade');
+  `;
 
       
-    -- Dificultades Klettersteig
+    // -- Dificultades Klettersteig
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES 
       ('A', 'Klettersteig'),
       ('B', 'Klettersteig'),
@@ -149,59 +165,72 @@ export async function seed_data_dificultades_escalada() {
       ('E', 'Klettersteig'),
       ('F', 'Klettersteig'),
       ('G', 'Klettersteig');
+  `;
 
 
-    -- Dificultades WI (Water Ice – Escalada en hielo)
+    // -- Dificultades WI (Water Ice – Escalada en hielo)
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('WI1', 'Water Ice'), ('WI2', 'Water Ice'), ('WI3', 'Water Ice'), ('WI4', 'Water Ice'),
       ('WI5', 'Water Ice'), ('WI6', 'Water Ice'), ('WI7', 'Water Ice');
+  `;
 
 
-    -- Dificultades M (Mixed – Mixto alpino/hielo)
+    // -- Dificultades M (Mixed – Mixto alpino/hielo)
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('M1', 'Mixed'), ('M2', 'Mixed'), ('M3', 'Mixed'), ('M4', 'Mixed'),
       ('M5', 'Mixed'), ('M6', 'Mixed'), ('M7', 'Mixed'), ('M8', 'Mixed'),
       ('M9', 'Mixed'), ('M10', 'Mixed'), ('M11', 'Mixed'), ('M12', 'Mixed'),
       ('M13', 'Mixed'), ('M14', 'Mixed'), ('M15', 'Mixed');
+  `;
 
 
-    -- Dificultades A (Artificial)
+    // -- Dificultades A (Artificial)
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('A0', 'Artificial'), ('A1', 'Artificial'), ('A2', 'Artificial'),
       ('A3', 'Artificial'), ('A4', 'Artificial'), ('A5', 'Artificial'),
       ('A6', 'Artificial');
+  `;
 
 
-    -- Dificultades Vía Ferrata (Hüsler)
+    // -- Dificultades Vía Ferrata (Hüsler)
+  await sql`
     INSERT INTO dificultad (nombre, sistema) VALUES
       ('F', 'Hüsler'), ('PD', 'Hüsler'), ('AD', 'Hüsler'),
       ('D', 'Hüsler'), ('TD', 'Hüsler'), ('ED', 'Hüsler'),
       ('EX', 'Hüsler');
   `;
+  console.log("ingreso de datos Dificultades escalada ..... OK");
 }
 
 
 export async function seed_data_dificultades_mtb() {
-  await sql`
-    --------------- Dificultad de MTB
+    // --------------- Dificultad de MTB
 
-    -- Tecnica
+    // -- Tecnica
+  await sql`
     insert into dificultad (nombre, sistema) values
       ('Baja', 'Tecnica de la pista'),
       ('Media', 'Tecnica de la pista'),
       ('Alta', 'Tecnica de la pista'),
       ('Extrema', 'Tecnica de la pista');
+  `;
 
 
-    -- Fisica
+    // -- Fisica
+  await sql`
     insert into dificultad (nombre, sistema) values
       ('Baja', 'Resistencia Fisica'),
       ('Media', 'Resistencia Fisica'),
       ('Alta', 'Resistencia Fisica'),
       ('Extrema', 'Resistencia Fisica');
+  `;
 
 
-    -- Terreno
+    // -- Terreno
+  await sql`
     insert into dificultad (nombre, sistema) values
       ('Barro', 'Terreno'),
       ('Roca', 'Terreno'),
@@ -210,52 +239,62 @@ export async function seed_data_dificultades_mtb() {
       ('Sendero y rocas', 'Terreno'),
       ('Calles o Parques', 'Terreno'),
       ('Bikepark/Pistas artificiales', 'Terreno');
+  `;
 
 
-    -- Estilo
+    // -- Estilo
+  await sql`
     insert into dificultad (nombre, sistema) values
       ('Competitivo', 'Estilo'),
       ('Freestyle', 'Estilo'),
       ('Recreativo', 'Estilo');
   `;
+  console.log("ingreso de datos Dificultades mtb ..... OK");
 }
 
 
 export async function seed_data_dificultades_trekking() {
-  await sql`
-    ---------------------Dificultades trekking
+    // ---------------------Dificultades trekking
       
-    -- Tecnica
+    // -- Tecnica
+  await sql`
     insert into dificultad (nombre, sistema) values
       ('Grado 1 (Fácil)', 'Tecnica del Terreno'),
       ('Grado 2 (Moderado)', 'Tecnica del Terreno'),
       ('Grado 3 (Difícil)', 'Tecnica del Terreno'),
       ('Grado 4 (Muy Difícil)', 'Tecnica del Terreno'),
       ('Grado 5 (Extremo)', 'Tecnica del Terreno');
+  `;
 
 
-    -- Fisica
+    // -- Fisica
+  await sql`
     insert into dificultad (nombre, sistema) values
       ('Grado A (Leve)', 'Esfuerzo Fisico'),
       ('Grado B (Moderado)', 'Esfuerzo Fisico'),
       ('Grado C (Exigente)', 'Esfuerzo Fisico'),
       ('Grado D (Muy Exigente)', 'Esfuerzo Fisico'),
       ('Grado E (Extremo)', 'Esfuerzo Fisico');
+  `;
 
 
-    -- Condiciones Ambientales
+    // -- Condiciones Ambientales
+  await sql`
     insert into dificultad (nombre, sistema) values
       ('Clase I (Estable)', 'Condiciones Ambientales'),
       ('Clase II (Variable)', 'Condiciones Ambientales'),
       ('Clase III (Adverso)', 'Condiciones Ambientales'),
       ('Clase IV (Peligroso)', 'Condiciones Ambientales');
+  `;
 
 
-    -- Altitud
+    // -- Altitud
+  await sql`
     insert into dificultad (nombre, sistema) values
       ('Nivel 1 (Baja)', 'Altitud'),
       ('Nivel 2 (Media)', 'Altitud'),
       ('Nivel 3 (Alta)', 'Altitud'),
       ('Nivel 4 (Extrema)', 'Altitud');
   `;
+  console.log("ingreso de datos Dificultades trekking ..... OK");
 }

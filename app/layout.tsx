@@ -1,5 +1,6 @@
 import '@/app/ui/global.css'
 import { inter, lusitana } from '@/app/ui/fonts'
+import { AuthProvider } from '../context/AuthContext';
 import { Metadata } from 'next';
  
 export const metadata: Metadata = {
@@ -18,7 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.className} antialiased`}>
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
