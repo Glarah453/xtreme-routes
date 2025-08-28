@@ -8,10 +8,22 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
+  Usuario,
 } from './definitions';
 import { formatCurrency } from './utils';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+
+
+
+export async function getUserByEmail(email: string): Promise<Usuario | null> {
+  const result = await sql<Usuario[]>`
+    SELECT * FROM usuarios WHERE email = ${email} LIMIT 1
+  `;
+  return result.length > 0 ? result[0] : null;
+}
+
+
 
 export async function fetchRevenue() {
   try {

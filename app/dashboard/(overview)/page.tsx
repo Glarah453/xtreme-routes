@@ -75,8 +75,8 @@
 //   );
 // }
 
-import { fetchCardData } from '@/app/lib/data';
-import DashboardClient from './dashboardClient';
+// import { fetchCardData } from '@/app/lib/data';
+import DashboardUserPage from '@/app/ui/dashboard/dashboard-users';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -86,19 +86,21 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   // 🚀 Todo lo que sea data fetching en el servidor
-  const {
-    numberOfInvoices,
-    numberOfCustomers,
-    totalPaidInvoices,
-    totalPendingInvoices,
-  } = await fetchCardData();
+  // const {
+  //   numberOfInvoices,
+  //   numberOfCustomers,
+  //   totalPaidInvoices,
+  //   totalPendingInvoices,
+  // } = await fetchCardData();
 
   return (
-    <DashboardClient
-      numberOfInvoices={numberOfInvoices}
-      numberOfCustomers={numberOfCustomers}
-      totalPaidInvoices={totalPaidInvoices}
-      totalPendingInvoices={totalPendingInvoices}
-    />
+    <>
+      <DashboardUserPage  />
+        {/* numberOfInvoices={numberOfInvoices} */}
+        {/* numberOfCustomers={numberOfCustomers} */}
+        {/* totalPaidInvoices={totalPaidInvoices} */}
+        {/* totalPendingInvoices={totalPendingInvoices} */}
+      {/* /> */}
+    </>
   );
 }

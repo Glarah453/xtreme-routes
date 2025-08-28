@@ -3,8 +3,11 @@
 // import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { authClient } from '../app/lib/firebase_Client';
-import { User, onAuthStateChanged } from 'firebase/auth';
+import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
 import { useRouter } from "next/navigation";
+// import { cookies } from "next/headers"; // pero para cliente usamos localStorage
+import { getUserByEmail } from "@/app/lib/data";
+import { Usuario } from "@/app/lib/definitions";
 
 
 // interface AuthContextType {
@@ -48,7 +51,7 @@ import { useRouter } from "next/navigation";
 //     });
 //
 //     return () => unsubscribe();
-//   }, []);
+//   }, [])
 //
 //   return (
 //     <AuthContext.Provider value={{ user, usuarioData, loading }}>
@@ -122,48 +125,234 @@ import { useRouter } from "next/navigation";
 // };
 
 
-export const AuthContext = createContext<any>(null);
+interface AuthContextType {
+  user: any;
+  usuarioData: Usuario | null;
+  loading: boolean;
+  signOut: () => Promise<void>;
+}
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
+  const [usuarioData, setUsuarioData] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authClient, async (firebaseUser) => {
-      if (firebaseUser) {
-        const idToken = await firebaseUser.getIdToken();
-        const res = await fetch("/api/authenticate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idToken }),
-        });
+      setUser(firebaseUser);
 
-        const data = await res.json();
+      if (firebaseUser?.email) {
+        const dbUser = await getUserByEmail(firebaseUser.email);
 
-        if (data.status === "NEEDS_REGISTRATION") {
-          // 🚨 aquí hacemos el redirect manual
-          router.push(
-            `/register?uid=${data.uid}&email=${data.email}&displayName=${data.name}&photoURL=${data.picture}`
-          );
-          setUser(null);
+        if (dbUser) {
+          setUsuarioData(dbUser); // usuario ya registrado en DB
         } else {
-          setUser(data);
+          setUsuarioData(null); // no existe en DB → debe ir a register
         }
       } else {
-        setUser(null);
+        setUsuarioData(null);
       }
+
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
+
+  const signOut = async () => {
+    await firebaseSignOut(authClient);
+    setUser(null);
+    setUsuarioData(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, usuarioData, loading, signOut }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Tipado
+// type UsuarioData = {
+//   id: string;
+//   nombre: string;
+//   email: string;
+//   edad?: number;
+//   comuna_id?: number;
+// };
+//
+// type AuthContextType = {
+//   user: any;
+//   usuarioData: UsuarioData | null;
+//   loading: boolean;
+//   signOut: () => Promise<void>;
+// };
+//
+// const AuthContext = createContext<AuthContextType | undefined>(undefined);
+//
+// export function AuthProvider({ children }: { children: ReactNode }) {
+//   const [user, setUser] = useState<any>(null);
+//   const [usuarioData, setUsuarioData] = useState<UsuarioData | null>(null);
+//   const [loading, setLoading] = useState(true);
+//
+//   useEffect(() => {
+//     // Listener de firebase
+//     const unsubscribe = onAuthStateChanged(authClient, async (firebaseUser) => {
+//       if (firebaseUser) {
+//         setUser(firebaseUser);
+//
+//         // opcional: pedir datos a tu API interna
+//         const res = await fetch("/api/getUserData?email=" + firebaseUser.email);
+//         if (res.ok) {
+//           const data = await res.json();
+//           setUsuarioData(data);
+//         }
+//       } else {
+//         setUser(null);
+//         setUsuarioData(null);
+//       }
+//       setLoading(false);
+//     });
+//
+//     return () => unsubscribe();
+//   }, []);
+//
+//   const signOut = async () => {
+//     await firebaseSignOut(authClient); // cerrar en Firebase
+//     setUser(null);
+//     setUsuarioData(null);
+//     // limpiar cookie en backend
+//     await fetch("/api/logout", { method: "POST" });
+//   };
+//
+//   return (
+//     <AuthContext.Provider value={{ user, usuarioData, loading, signOut }}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// }
+//
+// export function useAuth() {
+//   const context = useContext(AuthContext);
+//   if (!context) throw new Error("useAuth must be used inside AuthProvider");
+//   return context;
+// }
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export const AuthContext = createContext<any>(null);
+//
+// export function AuthProvider({ children }: { children: React.ReactNode }) {
+//   const [user, setUser] = useState<any>(null);
+//   const [loading, setLoading] = useState(true);
+//   const router = useRouter();
+//
+//   useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(authClient, async (firebaseUser) => {
+//       if (firebaseUser) {
+//         const idToken = await firebaseUser.getIdToken();
+//         const res = await fetch("/api/authenticate", {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json" },
+//           body: JSON.stringify({ idToken }),
+//         });
+//
+//         const data = await res.json();
+//
+//         if (data.status === "NEEDS_REGISTRATION") {
+//           // 🚨 aquí hacemos el redirect manual
+//           router.push(
+//             `/register?uid=${data.uid}&email=${data.email}&displayName=${data.name}&photoURL=${data.picture}`
+//           );
+//           setUser(null);
+//         } else {
+//           setUser(data);
+//         }
+//       } else {
+//         setUser(null);
+//       }
+//       setLoading(false);
+//     });
+//
+//     return () => unsubscribe();
+//   }, [router]);
+//
+//   return (
+//     <AuthContext.Provider value={{ user, loading }}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// }
+//
+// export const useAuth = () => useContext(AuthContext);
