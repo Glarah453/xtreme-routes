@@ -11,8 +11,9 @@ export default NextAuth(authConfig).auth;
 
 const PUBLIC_PATHS = new Set<string>([
   "/",
-  "/login",
-  "/register",
+  "/auth",
+  // "/login",
+  // "/register",
 ]);
 
 function isPublicPath(pathname: string) {
@@ -85,7 +86,8 @@ export async function middleware(req: NextRequest) {
   // Deja pasar APIs y archivos estáticos
   if (pathname.startsWith("/api") || isPublicPath(pathname)) {
     // Si el usuario ya está autenticado, opcionalmente redirigir fuera de /login o /register
-    if ((pathname === "/login" || pathname.startsWith("/register")) && token) {
+    // if ((pathname === "/login" || pathname.startsWith("/register")) && token) {
+    if (pathname === "/auth" && token) {
       try {
         await verifyToken(token);
         const url = new URL("/dashboard", req.url);
@@ -105,7 +107,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (!token) {
-    const url = new URL("/login", req.url);
+    const url = new URL("/auth", req.url);
     url.searchParams.set("callbackUrl", pathname + search);
     return NextResponse.redirect(url);
   }
@@ -114,7 +116,7 @@ export async function middleware(req: NextRequest) {
     await verifyToken(token);
     return NextResponse.next();
   } catch {
-    const url = new URL("/login", req.url);
+    const url = new URL("/auth", req.url);
     url.searchParams.set("callbackUrl", pathname + search);
     return NextResponse.redirect(url);
   }

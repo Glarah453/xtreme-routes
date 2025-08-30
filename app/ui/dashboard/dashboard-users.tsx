@@ -35,7 +35,7 @@ import { Suspense, useEffect } from "react";
 export default function DashboardUserPage() {
 
   // const { user, usuarioData, loading } = useContext(AuthContext);
-  const { user, usuarioData, loading, signOut } = useAuth();
+  const { user, usuarioData, loading, sign_out } = useAuth();
   const router = useRouter();
   // const { user, setUser } = useAuth();
 
@@ -46,11 +46,13 @@ export default function DashboardUserPage() {
   // };
 
   // console.log("datos: ", user, usuarioData, loading)
-  console.log("datos: ",  user, usuarioData, loading, signOut)
+  console.log("datos: ",  user, usuarioData, loading, sign_out);
+  // console.log(usuarioData);
 
   useEffect(() => {
     if (!loading && (!user || !usuarioData)) {
-      router.replace("/login"); // importante: replace en vez de push
+      // router.replace("/login"); // importante: replace en vez de push
+      router.replace("/auth"); // importante: replace en vez de push
     }
   }, [user, usuarioData, loading, router]);
 
@@ -58,8 +60,9 @@ export default function DashboardUserPage() {
   if (!user || !usuarioData) return null; // ya redirige en el useEffect
 
   const handleSignOut = async () => {
-    await signOut();
-    router.push("/login");
+    await sign_out();
+    // router.push("/login");
+    router.push("/auth");
   };  
 
 
@@ -74,7 +77,7 @@ export default function DashboardUserPage() {
         {/* </Suspense> */}
       </div>
       <div>
-        <h1>Bienvenido, {usuarioData.nombre}</h1>
+        <h1>Bienvenido, {usuarioData.displayname}</h1>
         <p>Email: {usuarioData.email}</p>
         <p>Edad: {usuarioData.edad}</p>
         <p>Comuna ID: {usuarioData.comuna_id}</p>

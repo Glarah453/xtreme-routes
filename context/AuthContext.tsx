@@ -3,11 +3,13 @@
 // import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { authClient } from '../app/lib/firebase_Client';
-import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+// import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from "next/navigation";
 // import { cookies } from "next/headers"; // pero para cliente usamos localStorage
 import { getUserByEmail } from "@/app/lib/data";
 import { Usuario } from "@/app/lib/definitions";
+import { logOutUser } from '@/app/lib/actions'
 
 
 // interface AuthContextType {
@@ -147,6 +149,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const dbUser = await getUserByEmail(firebaseUser.email);
 
         if (dbUser) {
+          console.log("data user: ", dbUser)
           setUsuarioData(dbUser); // usuario ya registrado en DB
         } else {
           setUsuarioData(null); // no existe en DB → debe ir a register
@@ -161,14 +164,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const signOut = async () => {
-    await firebaseSignOut(authClient);
+  const sign_out = async () => {
+    await signOut(authClient);
+    await logOutUser(usuarioData.id)
     setUser(null);
     setUsuarioData(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, usuarioData, loading, signOut }}>
+    <AuthContext.Provider value={{ user, usuarioData, loading, sign_out }}>
       {children}
     </AuthContext.Provider>
   );

@@ -45,3 +45,10 @@ export async function setAccessTokenCookie(accessToken: string) {
     maxAge: 60 * 60 * 24 * 7, // 7 días
   });
 }
+
+
+export async function deleteAccessTokenCookie() {
+  // Elimina la cookie de sesión
+  const cookieStore = await cookies(); // 👈 ahora con await
+  cookieStore.delete("access_token");
+}

@@ -207,6 +207,50 @@ export async function createSesionProcedures() {
     END;
     $$;
   `;
+
+  // await sql`
+  //   CREATE OR REPLACE PROCEDURE cerrar_sesion(
+  //       p_usuario_id BIGINT,
+  //       p_access_token VARCHAR(500)
+  //   )
+  //   LANGUAGE plpgsql
+  //   AS $$
+  //   BEGIN
+  //       -- Verificar que el usuario tiene una sesión activa
+  //       IF NOT EXISTS (
+  //           SELECT 1
+  //           FROM sesiones
+  //           WHERE usuario_id = p_usuario_id
+  //           AND estado = 'activa'
+  //           AND cierre_sesion IS NULL
+  //       ) THEN
+  //           RAISE EXCEPTION 'No hay sesión activa para el usuario: %', p_usuario_id;
+  //       END IF;
+  //
+  //       -- Cerrar la sesión activa más reciente
+  //       UPDATE sesiones
+  //       SET cierre_sesion = CURRENT_TIMESTAMP,
+  //           estado = 'cerrada'
+  //       WHERE usuario_id = p_usuario_id
+  //       AND access_token = p_access_token,
+  //       AND estado = 'activa'
+  //       AND cierre_sesion IS NULL
+  //       AND inicio_sesion = (
+  //           SELECT MAX(inicio_sesion)
+  //           FROM sesiones
+  //           WHERE usuario_id = p_usuario_id
+  //           AND estado = 'activa'
+  //           AND cierre_sesion IS NULL
+  //       );
+  //   EXCEPTION
+  //       WHEN OTHERS THEN
+  //           -- Revertir transacción en caso de error
+  //           ROLLBACK;
+  //           RAISE EXCEPTION 'Error al cerrar sesión: %', SQLERRM;
+  //   END;
+  //   $$;
+  // `;
+
   console.log("Creacion Procedimientos Sesion ..... OK");
 }
 
