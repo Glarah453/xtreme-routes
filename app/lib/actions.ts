@@ -17,6 +17,9 @@ import {
 } from "@/app/lib/auth";
 
 
+import { authenticateGoogleSignIn, authenticateEmailPassword } from '@/context/auth';
+
+
 
 export type State = {
   errors?: {
@@ -161,122 +164,134 @@ export async function authenticate(_: unknown, formData: FormData) {
   try {
     if (provider === "google") {
       // ---- GOOGLE SIGN-IN ----
-      const idToken = formData.get("idToken");
-      if (typeof idToken !== "string" || !idToken) {
-        return "Falta idToken de Google.";
-      }
+      // const idToken = formData.get("idToken");
+      // if (typeof idToken !== "string" || !idToken) {
+      //   return "Falta idToken de Google.";
+      // }
+      //
+      // // 1) Verificar token de Firebase
+      // const decoded = await authAdmin.verifyIdToken(idToken);
+      // const uid = decoded.uid || "";
+      // const email = decoded.email || "";
+      // const name = decoded.name || "";
+      // const picture = decoded.picture || "";
+      //
+      // if (!email) {
+      //   return "Tu cuenta de Google no tiene email verificado.";
+      // }
+      //
+      // // 2) Buscar usuario en DB por email
+      // const result = await sql`
+      //   SELECT id, displayname, photoURL
+      //   FROM usuarios
+      //   WHERE email = ${email}
+      //   LIMIT 1
+      // `;
+      //
+      // // console.log("Busqueda de usuario: ", result);
+      //
+      // if (result.length === 0) {
+      // // if (result === null) {
+      //   // console.log("Usuario no existe")
+      //   // Usuario NO existe -> enviar a /register con prefill
+      //   return {
+      //     needsRegistration: true,
+      //     uid,
+      //     email,
+      //     name,
+      //     picture,
+      //     provider: "google",
+      //   }; // 🔥 no redirect aquí
+      // }
+      //
+      // const dbUser = result[0];
+      // const userId = Number(dbUser.id);
+      //
+      // const accessToken = await generateAccessToken({
+      //   uid: userId,
+      //   email,
+      //   name: (dbUser.displayname as string) || name || undefined,
+      //   picture: (dbUser.photoURL as string) || picture || undefined,
+      //   provider: "google",
+      // });
+      //
+      // // await crearSesionEnDB(userId, accessToken);
+      // await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
+      // await setAccessTokenCookie(accessToken);
+      //
+      // // 4) Redirigir
+      // // redirect(redirectTo);
+      // return { success: true };
+    
 
-      // 1) Verificar token de Firebase
-      const decoded = await authAdmin.verifyIdToken(idToken);
-      const uid = decoded.uid || "";
-      const email = decoded.email || "";
-      const name = decoded.name || "";
-      const picture = decoded.picture || "";
+      const result = await authenticateGoogleSignIn(formData);
 
-      if (!email) {
-        return "Tu cuenta de Google no tiene email verificado.";
-      }
+      console.log("result authenticate", result);
 
-      // 2) Buscar usuario en DB por email
-      const result = await sql`
-        SELECT id, displayname, photoURL
-        FROM usuarios
-        WHERE email = ${email}
-        LIMIT 1
-      `;
-
-      // console.log("Busqueda de usuario: ", result);
-
-      if (result.length === 0) {
-      // if (result === null) {
-        // console.log("Usuario no existe")
-        // Usuario NO existe -> enviar a /register con prefill
-        return {
-          needsRegistration: true,
-          uid,
-          email,
-          name,
-          picture,
-          provider: "google",
-        }; // 🔥 no redirect aquí
-      }
-
-      const dbUser = result[0];
-      const userId = Number(dbUser.id);
-
-      const accessToken = await generateAccessToken({
-        uid: userId,
-        email,
-        name: (dbUser.displayname as string) || name || undefined,
-        picture: (dbUser.photoURL as string) || picture || undefined,
-        provider: "google",
-      });
-
-      // await crearSesionEnDB(userId, accessToken);
-      await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
-      await setAccessTokenCookie(accessToken);
-
-      // 4) Redirigir
-      // redirect(redirectTo);
-      return { success: true };
+      return result;
     }
 
     if (provider === "password") {
       // ---- EMAIL + PASSWORD ----
-      const email = formData.get("email");
-      const password = formData.get("password");
-
-      if (typeof email !== "string" || typeof password !== "string") {
-        return "Parámetros inválidos.";
-      }
-
-      // 1) Buscar usuario
-      const result = await sql`
-        SELECT id, password, displayname, photoURL
-        FROM usuarios
-        WHERE email = ${email}
-        LIMIT 1
-      `;
-
-      console.log("Busqueda de usuario: ", result);
-
-      if (result.length === 0) {
-        return { needsRegistration: true, email, provider: "password" };
-      }
-
-      const dbUser = result[0];
-      const hash = dbUser.password as string | null;
-
-      // if (!hash) {
-      //   // El usuario existe pero no tiene password (ej: se registró con Google)
-      //   return "Esta cuenta no tiene contraseña. Inicia sesión con Google.";
+      // const email = formData.get("email");
+      // const password = formData.get("password");
+      //
+      // if (typeof email !== "string" || typeof password !== "string") {
+      //   return "Parámetros inválidos.";
       // }
+      //
+      // // 1) Buscar usuario
+      // const result = await sql`
+      //   SELECT id, password, displayname, photoURL
+      //   FROM usuarios
+      //   WHERE email = ${email}
+      //   LIMIT 1
+      // `;
+      //
+      // // console.log("Busqueda de usuario: ", result);
+      //
+      // if (result.length === 0) {
+      //   return { needsRegistration: true, email, provider: "password" };
+      // }
+      //
+      // const dbUser = result[0];
+      // const hash = dbUser.password as string | null;
+      //
+      // // if (!hash) {
+      // //   // El usuario existe pero no tiene password (ej: se registró con Google)
+      // //   return "Esta cuenta no tiene contraseña. Inicia sesión con Google.";
+      // // }
+      //
+      // const ok = await bcrypt.compare(password, hash);
+      // if (!ok) {
+      //   return "Credenciales inválidas.";
+      // }
+      //
+      // // 2) OK -> token, sesión, cookie
+      // const userId = dbUser.id;
+      // const name = dbUser.displayname as string | null;
+      // const picture = dbUser.photoURL as string | null;
+      //
+      // const accessToken = await generateAccessToken({
+      //   uid: userId,
+      //   email,
+      //   name: name || undefined,
+      //   picture: picture || undefined,
+      //   provider: "password",
+      // });
+      //
+      // // await crearSesionEnDB(userId, accessToken);
+      // await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
+      // await setAccessTokenCookie(accessToken);
+      //
+      // // 3) Redirigir
+      // // redirect(redirectTo);
+      // return { success: true };
 
-      const ok = await bcrypt.compare(password, hash);
-      if (!ok) {
-        return "Credenciales inválidas.";
-      }
 
-      // 2) OK -> token, sesión, cookie
-      const userId = dbUser.id;
-      const name = dbUser.displayname as string | null;
-      const picture = dbUser.photoURL as string | null;
+      const result = await authenticateEmailPassword(formData);
 
-      const accessToken = await generateAccessToken({
-        uid: userId,
-        email,
-        name: name || undefined,
-        picture: picture || undefined,
-        provider: "password",
-      });
-
-      // await crearSesionEnDB(userId, accessToken);
-      await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
-      await setAccessTokenCookie(accessToken);
-
-      // 3) Redirigir
-      // redirect(redirectTo);
-      return { success: true };
+      return result;
     }
 
     // Provider desconocido
@@ -384,7 +399,7 @@ export async function logOutUser(id: number) {
         ${id}
       )
     `;
-    deleteAccessTokenCookie();
+    await deleteAccessTokenCookie();
   } catch (err: any) {
     console.error("Error al cerrar sesion en db: ", err);
     return err?.message || "No se pudo cerrar sesión.";

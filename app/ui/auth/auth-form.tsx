@@ -23,6 +23,7 @@ export default function AuthForm() {
 
 
   const handleLogin = async (formData: FormData) => {
+    // formData.append("provider", "password");
     const res = await authenticate(undefined, formData);
     if (res?.needsRegistration) {
       // setPrefill({ uid: res.uid, email: res.email, name: res.name, photoURL: res.picture });
@@ -51,7 +52,7 @@ export default function AuthForm() {
         setPrefill({ uid: res.uid, email: res.email, name: res.name, photoURL: res.picture });
         setActive(true);
       } else if (res?.success) {
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (err: any) {
       setError(err.message);
@@ -65,7 +66,7 @@ export default function AuthForm() {
     const res = await registerUser(undefined, formData);
 
     if (res.success) {
-      router.push("/dashboard");
+      router.push("/");
     } else {
       setError("Error registering user");
     }
@@ -139,16 +140,6 @@ export default function AuthForm() {
           </div>
           <div className="input-box-register">
             <input
-              type="number"
-              name="comuna"
-              placeholder="Comuna"
-              // defaultValue={prefill.email}
-              required
-            />
-            <i className="bx bxs-map-pin"></i>
-          </div>
-          <div className="input-box-register">
-            <input
               type="text"
               name="picture"
               placeholder="Foto de Perfil"
@@ -156,6 +147,16 @@ export default function AuthForm() {
               required
             />
             <i className="bx bxs-image-alt"></i>
+          </div>
+          <div className="input-box-register">
+            <input
+              type="number"
+              name="comuna"
+              placeholder="Comuna"
+              // defaultValue={prefill.email}
+              required
+            />
+            <i className="bx bxs-map-pin"></i>
           </div>
           <div className="input-box-register">
             <input type="password" name="password" placeholder="Password" minLength={6} required />

@@ -9,6 +9,9 @@ import {
   LatestInvoiceRaw,
   Revenue,
   Usuario,
+  PostsMain,
+  Regiones,
+  Comunas,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -21,6 +24,72 @@ export async function getUserByEmail(email: string): Promise<Usuario | null> {
     SELECT * FROM usuarios WHERE email = ${email} LIMIT 1
   `;
   return result.length > 0 ? result[0] : null;
+}
+
+
+
+export async function fetchPostsMain() {
+  try {
+    const posts = await sql<PostsMain[]>`
+      SELECT 
+          p.id AS post_id,
+          p.titulo,
+          u.displayname as user,
+          r.nombre as region,
+          co.nombre as comuna,
+          p.fecha_creacion,
+          COUNT(DISTINCT ps.sector_id) AS cantidad_sectores,
+          COUNT(DISTINCT pr.ruta_id) AS cantidad_rutas,
+          ROUND(COALESCE(AVG(v.valor), 0), 1) AS promedio_valoraciones,
+          COUNT(DISTINCT mg.usuario_id) AS cantidad_me_gusta,
+          COUNT(DISTINCT c.id) AS cantidad_comentarios
+      FROM 
+          posts p
+      LEFT JOIN 
+          usuarios u on p.usuario_id = u.id
+      LEFT JOIN
+          comunas co on p.comuna_id = co.id 
+      LEFT JOIN
+          regiones r on co.region_id = r.id
+      lEFT JOIN
+          posts_sectores ps ON p.id = ps.post_id
+      LEFT JOIN 
+          posts_rutas pr ON p.id = pr.post_id
+      LEFT JOIN 
+          valoraciones v ON p.id = v.post_id
+      LEFT JOIN 
+          me_gusta mg ON p.id = mg.post_id
+      LEFT JOIN 
+          comentarios c ON p.id = c.post_id
+      GROUP BY 
+          p.id, p.titulo, u.displayname, r.nombre, co.nombre, p.fecha_creacion
+      ORDER BY 
+          p.id    
+      LIMIT 20
+    `;
+    // const posts_main = posts.map((post) => ({
+    //   ...post,
+    // }));
+
+    const posts_main = posts.map((post) => ({
+      post_id: post.post_id,
+      titulo: post.titulo,
+      user: post.user,
+      region: post.region,
+      comuna: post.comuna,
+      fecha_creacion: post.fecha_creacion ? String(post.fecha_creacion) : null,
+      cantidad_sectores: post.cantidad_sectores,
+      cantidad_rutas: post.cantidad_rutas,
+      promedio_valoraciones: post.promedio_valoraciones,
+      cantidad_me_gusta: post.cantidad_me_gusta,
+      cantidad_comentarios: post.cantidad_comentarios
+    }));
+
+    return posts_main;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all posts for main.');
+  }
 }
 
 

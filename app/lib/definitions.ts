@@ -9,10 +9,49 @@ export type Usuario = {
   displayname: string;
   email: string;
   password: string;
-  uid: string;
+  fecha_nacimiento: string;
+  firebase_uid: string;
   comuna_id: number;
   photoURL: string;
 }
+
+export type UsuarioAuth = {
+  id: number;
+  displayname: string;
+  email: string;
+  password: string;
+  photoURL: string;
+};
+
+
+export type Regiones = {
+  id: number;
+  nombre: string;
+}
+
+export type Comunas = {
+  id: number;
+  nombre: string;
+  region_id: number;
+}
+
+
+export type PostsMain = {
+  post_id: number;
+  titulo: string;
+  user: string;
+  region: string;
+  comuna: string;
+  fecha_creacion: string;
+  cantidad_sectores: number;
+  cantidad_rutas: number;
+  promedio_valoraciones: number;
+  cantidad_me_gusta: number;
+  cantidad_comentarios: number;
+}
+
+
+
 
 
 
