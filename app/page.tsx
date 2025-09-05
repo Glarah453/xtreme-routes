@@ -5,11 +5,12 @@ import { lusitana } from '@/app/ui/fonts';
 import Image from 'next/image';
 import SideNavMain from '@/app/ui/home/slidenav-main.tsx';
 // import PostGrid from '@/app/ui/home/posts-main.tsx';
-import PostsCarousel from "@/app/ui/home/posts-main.tsx";
+// import PostsCarousel from "@/app/ui/home/posts-main.tsx";
+import SectionContent from "@/app/ui/home/content-main.tsx";
 
-import dynamic from 'next/dynamic';
-import { PoatsMain } from '@/app/lib/definitions';
-import { fetchPostsMain } from '@/app/lib/data';
+// import dynamic from 'next/dynamic';
+// import { PoatsMain } from '@/app/lib/definitions';
+// import { fetchPostsMain } from '@/app/lib/data';
 
 // const PostsCarousel = dynamic(() => import('@/app/ui/home/posts-main'), {
 //   ssr: false,
@@ -18,9 +19,9 @@ import { fetchPostsMain } from '@/app/lib/data';
 export default async function Page() {
 
   // const posts_main: PostsMain[] = await fetchPostsMain();
-  const posts_main = await fetchPostsMain();
+  // const posts_main = await fetchPostsMain();
 
-  console.log(posts_main);
+  // console.log(posts_main);
 
 
   
@@ -74,7 +75,8 @@ export default async function Page() {
 
 
           {/* <PostGrid /> */}
-          <PostsCarousel posts={posts_main} />
+          {/* <PostsCarousel posts={posts_main} /> */}
+          <SectionContent />
 
         </main>
       </div>

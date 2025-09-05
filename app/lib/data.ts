@@ -10,6 +10,9 @@ import {
   Revenue,
   Usuario,
   PostsMain,
+  PostAllInfo,
+  SectorAllInfoByPost,
+  RoutesAllInfoByPost,
   Regiones,
   Comunas,
 } from './definitions';
@@ -91,6 +94,109 @@ export async function fetchPostsMain() {
     throw new Error('Failed to fetch all posts for main.');
   }
 }
+
+export async function fetchPostAllInfoByID(id: string){
+  try{
+    const postInfo = await sql<PostAllInfo[]>`
+      SELECT p.id, p.titulo, p.contenido, p.latitud, p.longitud, p.fecha_creacion, p.lastedit, 
+             reg.id AS region_id, reg.nombre AS region_nombre,
+             c.id AS comuna_id, c.nombre AS comuna_nombre,
+             u.id AS usuario_id, u.displayname AS usuario_nombre, u.email AS usuario_email, u.photourl AS usuario_photourl,
+              ROUND(COALESCE(AVG(v.valor), 0), 1) AS promedio_valoraciones,
+              COUNT(DISTINCT mg.usuario_id) AS cantidad_me_gusta,
+              COUNT(DISTINCT cc.id) AS cantidad_comentarios
+      FROM posts p
+      LEFT JOIN comunas c ON p.comuna_id = c.id
+      LEFT JOIN regiones reg ON c.region_id = reg.id
+      LEFT JOIN usuarios u ON p.usuario_id = u.id
+      LEFT JOIN 
+          valoraciones v ON p.id = v.post_id
+      LEFT JOIN 
+          me_gusta mg ON p.id = mg.post_id
+      LEFT JOIN 
+          comentarios cc ON p.id = cc.post_id
+      WHERE p.id = ${id}
+      GROUP BY 
+          p.id, p.titulo, p.contenido, p.latitud, p.longitud, p.fecha_creacion, p.lastedit,
+          reg.id, reg.nombre, c.id, c.nombre,
+          u.id, u.displayname, u.email, u.photourl
+    `;
+
+    return postInfo;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Falied to fetch Post Info by ID');
+  } 
+}
+
+
+export async function fetchSectorAllInfoByPostID(id: string){
+  try{
+    const sectorInfoByPost = await sql<SectorAllInfoByPost[]>`
+      SELECT  
+          s.id, s.nombre, s.descripcion, s.image, s.latitud, s.longitud
+      FROM posts p
+      LEFT JOIN posts_sectores ps ON p.id = ps.post_id
+      LEFT JOIN sectores s ON ps.sector_id = s.id
+      WHERE p.id = ${id}
+    `;
+
+    return sectorInfoByPost;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Falied to fetch Sector Info by PostID');
+  } 
+}
+
+
+
+export async function fetchRoutesAllInfoByPostID(id: string){
+  try{
+    const routesInfoByPost = await sql<RoutesAllInfoByPost[]>`
+      SELECT  
+          r.id, r.nombre, r.descripcion, r.distancia, r.desnivel_acumulado, r.es_personalizada, r.privacidad
+      FROM posts p
+      LEFT JOIN posts_rutas pr ON p.id = pr.post_id
+      LEFT JOIN rutas r ON pr.ruta_id = r.id
+      WHERE p.id = ${id}
+    `;
+
+    return routesInfoByPost;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Falied to fetch Routes Info by PostID');
+  } 
+}
+
+export async function fetchSectorsMain(){
+  try{
+    const sector_main = await sql`
+      SELECT * FROM sectores
+    `;
+
+    return sector_main;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Failed to fetch Sectors Main');
+  }
+}
+
+
+export async function fetchRoutesMain() {
+  try{
+    const routes_main = await sql`
+      SELECT * FROM rutas
+    `;
+
+    return routes_main;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Failed to fetch Sectors Main');
+  }
+}
+
+
+
 
 
 

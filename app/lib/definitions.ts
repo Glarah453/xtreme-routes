@@ -51,7 +51,31 @@ export type PostsMain = {
 }
 
 
+export type PostAllInfo = {
+  post_id: number;
+  titulo: string;
+  contenido: string;
+  latitud: string;
+  longitud: string;
+  fecha_creacion: string;
+  lastedit: string;
+  region: string;
+  comuna: string;
+  user: string;
+  cantidad_sectores: number;
+  cantidad_rutas: number;
+  promedio_valoraciones: number;
+  cantidad_me_gusta: number;
+  cantidad_comentarios: number;
+}
 
+export type SectorAllInfoByPost = {
+  id: number;
+}
+
+export type RoutesAllInfoByPost = {
+  id: number;
+}
 
 
 

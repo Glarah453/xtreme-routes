@@ -56,7 +56,7 @@ export default function SideNavMain() {
 
   return (
     // <div className="flex h-full flex-col bg-white px-3 py-4 md:px-2">
-    <aside className="lg:w-1/4 bg-white p-4 rounded-md shadow-md">
+    <aside className="lg:w-1/6 bg-white p-4 rounded-md shadow-md">
       <Link
         className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4 md:h-40"
         href="/"
