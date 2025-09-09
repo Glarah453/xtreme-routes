@@ -2,12 +2,16 @@
 
 import '@/app/ui/auth/auth-form.css'
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authenticate, registerUser } from "@/app/lib/actions";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { authClient } from "@/app/lib/firebase_Client";
 import { Button } from "@/app/ui/button";
+
+
+import { fetchAllRegiones, fetchAllComunasByRegionID } from '@/app/lib/data'
+
 
 
 export default function AuthForm() {
@@ -20,6 +24,53 @@ export default function AuthForm() {
 
   const [active, setActive] = useState(false); // false = login, true = register
   const [prefill, setPrefill] = useState<{ uid?: string; email?: string; name?: string; photoURL?: string }>({});
+
+  const [region, setRegion] = useState("");
+
+  const [optionsRegiones, setOptionsRegiones] = useState([]);
+  const [optionsComunas, setOptionsComunas] = useState([]);
+
+  useEffect(() => {
+    fetchAllRegiones()
+      .then((data) => {
+        // const arrayRg = data.response;
+        // const arrayRg = data[0];
+        const mappedOptions = data.map((item) => (
+          <option key={item.id} value={item.id}>
+            {item.nombre} 
+          </option>
+        ));
+
+        setOptionsRegiones(mappedOptions);
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos del primer select:', error);
+      });
+
+  }, []);
+
+  useEffect(() => {
+    if(!region) return;
+
+    fetchAllComunasByRegionID(region)
+      .then((data) => {
+        // const arrayCm = data.response;
+        // const arrayCm = data[0];
+        const mappedOptions = data.map((item) => (
+          <option key={item.id} value={item.id}>
+            {item.nombre}
+          </option>
+        ));
+
+        setOptionsComunas(mappedOptions);
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos del segundo select:', error);
+      });
+
+  }, [region]);
+
+
 
 
   const handleLogin = async (formData: FormData) => {
@@ -63,14 +114,23 @@ export default function AuthForm() {
     // aquí llamas a tu registerUser de actions.ts
     // si es exitoso => router.push("/dashboard")
     formData.append('uid', prefill.uid ?? "");
-    const res = await registerUser(undefined, formData);
+    formData.append('picture', prefill.photoURL ?? "");
 
-    if (res.success) {
-      router.push("/");
-    } else {
-      setError("Error registering user");
+    // console.log(formData.entries)
+    const formValues: Record<string, string> = {};
+    for (const [key, value] of formData.entries()) {
+      formValues[key] = value as string;
     }
-    
+    console.log('Datos del formulario:', formValues);
+
+    // const res = await registerUser(undefined, formData);
+    //
+    // if (res.success) {
+    //   router.push("/");
+    // } else {
+    //   setError("Error registering user");
+    // }
+    //
 
   };
 
@@ -138,24 +198,42 @@ export default function AuthForm() {
             />
             <i className="bx bxs-cake"></i>
           </div>
+          {/* <div className="input-box-register"> */}
+          {/*   <input */}
+          {/*     type="text" */}
+          {/*     name="picture" */}
+          {/*     placeholder="Foto de Perfil" */}
+          {/*     defaultValue={prefill.photoURL} */}
+          {/*     required */}
+          {/*   /> */}
+          {/*   <i className="bx bxs-image-alt"></i> */}
+          {/* </div> */}
           <div className="input-box-register">
-            <input
-              type="text"
-              name="picture"
-              placeholder="Foto de Perfil"
-              defaultValue={prefill.photoURL}
+            <select
+              type="number"
+              name="region"
+              placeholder="Region"
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              // defaultValue={prefill.photoURL}
               required
-            />
+            >
+              <option value="">Selecciona una Región</option>
+              {optionsRegiones}
+            </select>
             <i className="bx bxs-image-alt"></i>
           </div>
           <div className="input-box-register">
-            <input
+            <select
               type="number"
               name="comuna"
               placeholder="Comuna"
               // defaultValue={prefill.email}
               required
-            />
+            >
+              <option value="">Selecciona una Comuna</option>
+              {optionsComunas}
+            </select>
             <i className="bx bxs-map-pin"></i>
           </div>
           <div className="input-box-register">

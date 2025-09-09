@@ -3,6 +3,7 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import type { UsuarioAuth } from '@/app/lib/definitions';
+import { formatCurrency, calculateAge } from '@/app/lib/utils';
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
 
@@ -219,6 +220,118 @@ export async function authenticateEmailPassword(formData: FormData) {
     return { success: true };
   }
 }
+
+
+// Función para generar un color hexadecimal aleatorio
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function getConsistentColor(input: string) {
+  const colors = ['FF5733', '33FF57', '5733FF', 'FF33A1', '33FFF5'];
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    hash = input.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+}
+
+
+
+export async function registerUserDB(formData: FormData) {
+  const uid = formData.get("uid") || "null";
+  const nombre = formData.get("name");
+  const email = formData.get("email");
+  const fecha_nacimiento = formData.get("birthdate");
+  // const photoURL = formData.get("picture") || "";
+  
+  const randomColor = getConsistentColor(nombre);
+  
+  const photoURL = formData.get("picture") || `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&size=256&background=${randomColor}&color=fff`;
+  const comuna_id = formData.get("comuna");
+  const password = formData.get("password"); // opcional
+  // const redirectTo = (formData.get("redirectTo") as string) || "/dashboard";
+  // const redirectTo = sanitizeRedirect(formData.get("redirectTo"));
+
+  if (
+    typeof nombre !== "string" ||
+    typeof email !== "string" ||
+    typeof fecha_nacimiento !== "string" ||
+    typeof comuna_id !== "string"
+  ) {
+    return "Datos de registro inválidos.";
+  } else {
+
+  // try {
+    // 1) Crear usuario vía tu PROCEDURE (sin password)
+    await sql`
+      CALL crear_usuario(
+        ${nombre},
+        ${email},
+        ${fecha_nacimiento},
+        ${photoURL},
+        ${comuna_id},
+        NULL
+      );
+    `;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await sql`
+      UPDATE usuarios
+      SET firebase_uid = ${uid}, password = ${hashedPassword}
+      WHERE email = ${email};
+    `;
+
+
+    const dbUser = await getUser(email);
+    // 2) Recuperar el id del usuario recién creado
+    // const result = await sql`
+    //   SELECT id, displayname, photoURL
+    //   FROM usuarios
+    //   WHERE email = ${email}
+    //   LIMIT 1
+    // `;
+
+    // if (result.length === 0) {
+    if (!dbUser) {
+      return "No se pudo recuperar el usuario recién creado.";
+    }
+
+    console.log("result usuario creado: ", result);
+
+    const userId = dbUser.id;
+
+
+    // 4) Generar token, guardar sesión, setear cookie
+    const accessToken = await generateAccessToken({
+      uid: userId,
+      email,
+      name: nombre,
+      picture: String(photoURL || ""),
+      provider: "register",
+    });
+
+    // await crearSesionEnDB(userId, accessToken);
+    await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
+    await setAccessTokenCookie(accessToken);
+
+    // 5) Redirigir
+    // const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/dashboard";
+    // redirect(safeRedirect);
+    return { success: true };
+  }
+}
+
+
+
+
+
 
 
 

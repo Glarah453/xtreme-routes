@@ -32,7 +32,7 @@ export type Regiones = {
 export type Comunas = {
   id: number;
   nombre: string;
-  region_id: number;
+  // region_id: number;
 }
 
 
@@ -76,6 +76,18 @@ export type SectorAllInfoByPost = {
 export type RoutesAllInfoByPost = {
   id: number;
 }
+
+
+// export type RegionesAll = {
+//   id: number;
+//   nombre: string;
+// }
+//
+//
+// export type ComunasAllByRegionID = {
+//   id: number;
+//   nombre: string;
+// }
 
 
 

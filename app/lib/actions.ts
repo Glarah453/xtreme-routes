@@ -17,7 +17,11 @@ import {
 } from "@/app/lib/auth";
 
 
-import { authenticateGoogleSignIn, authenticateEmailPassword } from '@/context/auth';
+import { 
+  authenticateGoogleSignIn, 
+  authenticateEmailPassword, 
+  registerUserDB,
+} from '@/context/auth';
 
 
 
@@ -309,81 +313,85 @@ export async function authenticate(_: unknown, formData: FormData) {
 
 export async function registerUser(_: unknown, formData: FormData) {
   // Campos mínimos requeridos por tu PROCEDURE crear_usuario
-  const uid = formData.get("uid") || "";
-  const nombre = formData.get("name");
-  const email = formData.get("email");
-  const fecha_nacimiento = formData.get("birthdate");
-  const photoURL = formData.get("picture") || "";
-  const comuna_id = formData.get("comuna");
-  const password = formData.get("password"); // opcional
-  // const redirectTo = (formData.get("redirectTo") as string) || "/dashboard";
-  // const redirectTo = sanitizeRedirect(formData.get("redirectTo"));
-
-  if (
-    typeof nombre !== "string" ||
-    typeof email !== "string" ||
-    typeof fecha_nacimiento !== "string" ||
-    typeof comuna_id !== "string"
-  ) {
-    return "Datos de registro inválidos.";
-  }
-
+  // const uid = formData.get("uid") || "";
+  // const nombre = formData.get("name");
+  // const email = formData.get("email");
+  // const fecha_nacimiento = formData.get("birthdate");
+  // const photoURL = formData.get("picture") || "";
+  // const comuna_id = formData.get("comuna");
+  // const password = formData.get("password"); // opcional
+  // // const redirectTo = (formData.get("redirectTo") as string) || "/dashboard";
+  // // const redirectTo = sanitizeRedirect(formData.get("redirectTo"));
+  //
+  // if (
+  //   typeof nombre !== "string" ||
+  //   typeof email !== "string" ||
+  //   typeof fecha_nacimiento !== "string" ||
+  //   typeof comuna_id !== "string"
+  // ) {
+  //   return "Datos de registro inválidos.";
+  // }
+  //
   try {
-    // 1) Crear usuario vía tu PROCEDURE (sin password)
-    await sql`
-      CALL crear_usuario(
-        ${nombre},
-        ${email},
-        ${fecha_nacimiento},
-        ${photoURL},
-        ${comuna_id},
-        NULL
-      );
-    `;
+  //   // 1) Crear usuario vía tu PROCEDURE (sin password)
+  //   await sql`
+  //     CALL crear_usuario(
+  //       ${nombre},
+  //       ${email},
+  //       ${fecha_nacimiento},
+  //       ${photoURL},
+  //       ${comuna_id},
+  //       NULL
+  //     );
+  //   `;
+  //
+  //   const hashedPassword = await bcrypt.hash(password, 10);
+  //
+  //   await sql`
+  //     UPDATE usuarios
+  //     SET firebase_uid = ${uid}, password = ${hashedPassword}
+  //     WHERE email = ${email};
+  //   `;
+  //
+  //
+  //   // 2) Recuperar el id del usuario recién creado
+  //   const result = await sql`
+  //     SELECT id, displayname, photoURL
+  //     FROM usuarios
+  //     WHERE email = ${email}
+  //     LIMIT 1
+  //   `;
+  //
+  //   if (result.length === 0) {
+  //     return "No se pudo recuperar el usuario recién creado.";
+  //   }
+  //
+  //   console.log("result usuario creado: ", result);
+  //
+  //   const userId = result[0].id;
+  //
+  //
+  //   // 4) Generar token, guardar sesión, setear cookie
+  //   const accessToken = await generateAccessToken({
+  //     uid: userId,
+  //     email,
+  //     name: nombre,
+  //     picture: String(photoURL || ""),
+  //     provider: "register",
+  //   });
+  //
+  //   // await crearSesionEnDB(userId, accessToken);
+  //   await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
+  //   await setAccessTokenCookie(accessToken);
+  //
+  //   // 5) Redirigir
+  //   // const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/dashboard";
+  //   // redirect(safeRedirect);
+  //   return { success: true };
+    const result = registerUserDB(formData);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    return result;
 
-    await sql`
-      UPDATE usuarios
-      SET firebase_uid = ${uid}, password = ${hashedPassword}
-      WHERE email = ${email};
-    `;
-
-
-    // 2) Recuperar el id del usuario recién creado
-    const result = await sql`
-      SELECT id, displayname, photoURL
-      FROM usuarios
-      WHERE email = ${email}
-      LIMIT 1
-    `;
-
-    if (result.length === 0) {
-      return "No se pudo recuperar el usuario recién creado.";
-    }
-
-    console.log("result usuario creado: ", result);
-
-    const userId = result[0].id;
-
-
-    // 4) Generar token, guardar sesión, setear cookie
-    const accessToken = await generateAccessToken({
-      uid: userId,
-      email,
-      name: nombre,
-      picture: String(photoURL || ""),
-      provider: "register",
-    });
-
-    // await crearSesionEnDB(userId, accessToken);
-    await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
-    await setAccessTokenCookie(accessToken);
-
-    // 5) Redirigir
-    // const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/dashboard";
-    // redirect(safeRedirect);
-    return { success: true };
   } catch (err: any) {
     console.error("Error en registerUser:", err);
     // Si tu PROCEDURE lanza excepciones, aquí caerán.

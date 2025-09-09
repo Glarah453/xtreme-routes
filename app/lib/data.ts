@@ -196,7 +196,35 @@ export async function fetchRoutesMain() {
 }
 
 
+export async function fetchAllRegiones() {
+  try{
+    const all_regiones = await sql<Regiones[]>`
+      SELECT * FROM regiones
+    `;
 
+    return all_regiones;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Failed to fetch All regiones');
+  }
+}
+
+
+export async function fetchAllComunasByRegionID(id: string){
+  try{
+    const comunasByRegionID = await sql<Comunas[]>`
+      SELECT  
+          id, nombre
+      FROM comunas
+      WHERE region_id = ${id}
+    `;
+
+    return comunasByRegionID;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Falied to fetch Comunas by RegionID');
+  } 
+}
 
 
 
