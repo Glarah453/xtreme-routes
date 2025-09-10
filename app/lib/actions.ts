@@ -1,7 +1,7 @@
 'use server';
 
 import postgres from 'postgres';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -11,17 +11,19 @@ import { AuthError } from 'next-auth';
 import { authAdmin } from './firebase_Admin';
 // import { SignJWT } from "jose"; // para firmar el access_token con clave secreta propia
 import { 
-  generateAccessToken, 
-  setAccessTokenCookie, 
+  // generateAccessToken, 
+  // setAccessTokenCookie, 
   deleteAccessTokenCookie,
 } from "@/app/lib/auth";
 
+import { getRandomColor, getConsistentColor } from '@/app/lib/utils';
 
 import { 
   authenticateGoogleSignIn, 
   authenticateEmailPassword, 
   registerUserDB,
 } from '@/context/auth';
+
 
 
 
@@ -168,21 +170,21 @@ export async function authenticate(_: unknown, formData: FormData) {
   try {
     if (provider === "google") {
       // ---- GOOGLE SIGN-IN ----
-      // const idToken = formData.get("idToken");
-      // if (typeof idToken !== "string" || !idToken) {
-      //   return "Falta idToken de Google.";
-      // }
-      //
-      // // 1) Verificar token de Firebase
-      // const decoded = await authAdmin.verifyIdToken(idToken);
-      // const uid = decoded.uid || "";
-      // const email = decoded.email || "";
-      // const name = decoded.name || "";
-      // const picture = decoded.picture || "";
-      //
-      // if (!email) {
-      //   return "Tu cuenta de Google no tiene email verificado.";
-      // }
+      const idToken = formData.get("idToken");
+      if (typeof idToken !== "string" || !idToken) {
+        return "Falta idToken de Google.";
+      }
+
+      // 1) Verificar token de Firebase
+      const decoded = await authAdmin.verifyIdToken(idToken);
+      const uid = decoded.uid || "";
+      const email = decoded.email || "";
+      const name = decoded.name || "";
+      const picture = decoded.picture || "";
+
+      if (!email) {
+        return "Tu cuenta de Google no tiene email verificado.";
+      }
       //
       // // 2) Buscar usuario en DB por email
       // const result = await sql`
@@ -228,21 +230,28 @@ export async function authenticate(_: unknown, formData: FormData) {
       // return { success: true };
     
 
-      const result = await authenticateGoogleSignIn(formData);
+      // const result = await authenticateGoogleSignIn(formData);
+      const result = await authenticateGoogleSignIn(uid, email, name, picture);
 
-      console.log("result authenticate", result);
+      // console.log("result authenticate", result);
 
       return result;
     }
 
     if (provider === "password") {
       // ---- EMAIL + PASSWORD ----
-      // const email = formData.get("email");
-      // const password = formData.get("password");
-      //
-      // if (typeof email !== "string" || typeof password !== "string") {
-      //   return "Parámetros inválidos.";
-      // }
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+
+      // const parsedCredentials = z
+      //   .object({ email: z.string().email(), password: z.string().min(6) })
+      //   .safeParse(credentials);
+
+
+      if (typeof email !== "string" || typeof password !== "string") {
+        return "Parámetros inválidos.";
+      }
       //
       // // 1) Buscar usuario
       // const result = await sql`
@@ -293,13 +302,19 @@ export async function authenticate(_: unknown, formData: FormData) {
       // return { success: true };
 
 
-      const result = await authenticateEmailPassword(formData);
-
-      return result;
+      // const result = await authenticateEmailPassword(formData);
+      const result = await authenticateEmailPassword(email, password);
+      if(result.success) {
+        revalidatePath('/');
+        // redirect('/');
+        return result;
+      } else {
+        return result;
+    
+      }
     }
-
     // Provider desconocido
-    return "Proveedor no soportado.";
+    // return "Proveedor no soportado.";
   } catch (err: any) {
     console.error("Error en authenticate:", err);
     // Mensaje genérico para el UI
@@ -313,82 +328,33 @@ export async function authenticate(_: unknown, formData: FormData) {
 
 export async function registerUser(_: unknown, formData: FormData) {
   // Campos mínimos requeridos por tu PROCEDURE crear_usuario
-  // const uid = formData.get("uid") || "";
-  // const nombre = formData.get("name");
-  // const email = formData.get("email");
-  // const fecha_nacimiento = formData.get("birthdate");
-  // const photoURL = formData.get("picture") || "";
-  // const comuna_id = formData.get("comuna");
-  // const password = formData.get("password"); // opcional
-  // // const redirectTo = (formData.get("redirectTo") as string) || "/dashboard";
-  // // const redirectTo = sanitizeRedirect(formData.get("redirectTo"));
+  const uid = formData.get("uid") || "";
+  const nombre = formData.get("name");
+  const email = formData.get("email");
+  const fecha_nacimiento = formData.get("birthdate");
+  
+  const randomColor = getConsistentColor(nombre);
   //
-  // if (
-  //   typeof nombre !== "string" ||
-  //   typeof email !== "string" ||
-  //   typeof fecha_nacimiento !== "string" ||
-  //   typeof comuna_id !== "string"
-  // ) {
-  //   return "Datos de registro inválidos.";
-  // }
-  //
+  const photoURL = formData.get("picture") || `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&size=256&background=${randomColor}&color=fff`;
+  
+  const comuna_id = formData.get("comuna");
+  const password = formData.get("password"); // opcional
+  // const redirectTo = (formData.get("redirectTo") as string) || "/dashboard";
+  // const redirectTo = sanitizeRedirect(formData.get("redirectTo"));
+
+  if (
+    typeof nombre !== "string" ||
+    typeof email !== "string" ||
+    typeof fecha_nacimiento !== "string" ||
+    typeof comuna_id !== "string"
+  ) {
+    return "Datos de registro inválidos.";
+  }
+
   try {
-  //   // 1) Crear usuario vía tu PROCEDURE (sin password)
-  //   await sql`
-  //     CALL crear_usuario(
-  //       ${nombre},
-  //       ${email},
-  //       ${fecha_nacimiento},
-  //       ${photoURL},
-  //       ${comuna_id},
-  //       NULL
-  //     );
-  //   `;
-  //
-  //   const hashedPassword = await bcrypt.hash(password, 10);
-  //
-  //   await sql`
-  //     UPDATE usuarios
-  //     SET firebase_uid = ${uid}, password = ${hashedPassword}
-  //     WHERE email = ${email};
-  //   `;
-  //
-  //
-  //   // 2) Recuperar el id del usuario recién creado
-  //   const result = await sql`
-  //     SELECT id, displayname, photoURL
-  //     FROM usuarios
-  //     WHERE email = ${email}
-  //     LIMIT 1
-  //   `;
-  //
-  //   if (result.length === 0) {
-  //     return "No se pudo recuperar el usuario recién creado.";
-  //   }
-  //
-  //   console.log("result usuario creado: ", result);
-  //
-  //   const userId = result[0].id;
-  //
-  //
-  //   // 4) Generar token, guardar sesión, setear cookie
-  //   const accessToken = await generateAccessToken({
-  //     uid: userId,
-  //     email,
-  //     name: nombre,
-  //     picture: String(photoURL || ""),
-  //     provider: "register",
-  //   });
-  //
-  //   // await crearSesionEnDB(userId, accessToken);
-  //   await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
-  //   await setAccessTokenCookie(accessToken);
-  //
-  //   // 5) Redirigir
-  //   // const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/dashboard";
-  //   // redirect(safeRedirect);
-  //   return { success: true };
-    const result = registerUserDB(formData);
+
+
+    const result = registerUserDB(uid, nombre, email, fecha_nacimiento, photoURL, comuna_id, password);
 
     return result;
 
@@ -408,6 +374,8 @@ export async function logOutUser(id: number) {
       )
     `;
     await deleteAccessTokenCookie();
+    revalidatePath('/');
+    // redirect('/');
   } catch (err: any) {
     console.error("Error al cerrar sesion en db: ", err);
     return err?.message || "No se pudo cerrar sesión.";

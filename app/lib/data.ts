@@ -23,10 +23,16 @@ const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 
 export async function getUserByEmail(email: string): Promise<Usuario | null> {
-  const result = await sql<Usuario[]>`
-    SELECT * FROM usuarios WHERE email = ${email} LIMIT 1
-  `;
-  return result.length > 0 ? result[0] : null;
+  try {
+    const result = await sql<Usuario[]>`
+      SELECT id, displayname, email, rol, fecha_nacimiento, photourl, comuna_id, firebase_uid 
+      FROM usuarios WHERE email = ${email} LIMIT 1
+    `;
+    return result.length > 0 ? result[0] : null;
+  } catch (err) {
+    console.error('Database Error: ', err);
+    throw new Error('Failed to get User Info by Email');
+  }
 }
 
 

@@ -4,137 +4,41 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { authClient } from '../app/lib/firebase_Client';
 // import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
-import { User, onAuthStateChanged, signOut } from 'firebase/auth';
+// import { User, onAuthStateChanged, signOut } from 'firebase/auth';
+import { User as FirebaseUser, onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 // import { cookies } from "next/headers"; // pero para cliente usamos localStorage
 import { getUserByEmail } from "@/app/lib/data";
+// import { getUserFromCookie } from "@/context/auth"; // lo veremos abajo
+import { getUserFromCookie } from './auth'; // lo veremos abajo
 import { Usuario } from "@/app/lib/definitions";
 import { logOutUser } from '@/app/lib/actions'
 
 
+
 // interface AuthContextType {
-//   user: User | null;
-//   usuarioData: { usuario_id: number; nombre: string; email: string; fecha_nacimiento: string; photoURL: string; comuna_id: number; edad?: number } | null;
+//   user: any;
+//   usuarioData: Usuario | null;
 //   loading: boolean;
+//   signOut: () => Promise<void>;
 // }
-//
-// export const AuthContext = createContext<AuthContextType>({ user: null, usuarioData: null, loading: true });
-//
-// export const AuthProvider = ({ children }: { children: ReactNode }) => {
-//   const [user, setUser] = useState<User | null>(null);
-//   const [usuarioData, setUsuarioData] = useState<AuthContextType['usuarioData']>(null);
-//   const [loading, setLoading] = useState(true);
-//
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(authClient, async (firebaseUser) => {
-//       if (firebaseUser) {
-//         try {
-//           const idToken = await firebaseUser.getIdToken();
-//           const response = await fetch(`/api/usuarios/${firebaseUser.uid}`, {
-//             headers: { Authorization: `Bearer ${idToken}` },
-//           });
-//           if (response.ok) {
-//             const data = await response.json();
-//             setUsuarioData(data);
-//           } else {
-//             console.error('Error fetching usuario data:', await response.json());
-//             setUsuarioData(null);
-//           }
-//           setUser(firebaseUser);
-//         } catch (error) {
-//           console.error('Error in auth state change:', error);
-//           setUsuarioData(null);
-//         }
-//       } else {
-//         setUser(null);
-//         setUsuarioData(null);
-//       }
-//       setLoading(false);
-//     });
-//
-//     return () => unsubscribe();
-//   }, [])
-//
-//   return (
-//     <AuthContext.Provider value={{ user, usuarioData, loading }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
 
 
-// type AuthContextType = {
-//   user: User | null;
-//   loading: boolean;
-//   needsRegistration: boolean;
-// };
-//
-// const AuthContext = createContext<AuthContextType>({
-//   user: null,
-//   loading: true,
-//   needsRegistration: false,
-// });
-//
-// export const useAuth = () => useContext(AuthContext);
-//
-// export function AuthProvider({ children }: { children: ReactNode }) {
-//   const [user, setUser] = useState<User | null>(null);
-//   const [loading, setLoading] = useState(true);
-//   const [needsRegistration, setNeedsRegistration] = useState(false);
-//
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(authClient, async (firebaseUser) => {
-//       if (firebaseUser) {
-//         try {
-//           // 1. Obtener el token de Firebase
-//           const idToken = await firebaseUser.getIdToken();
-//
-//           // 2. Llamar a la action `authenticate` en el servidor
-//           const res = await fetch("/api/authenticate", {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify({ idToken }),
-//           });
-//
-//           const data = await res.json();
-//
-//           if (data.status === "NEEDS_REGISTRATION") {
-//             setNeedsRegistration(true);
-//             setUser(firebaseUser);
-//           } else {
-//             setNeedsRegistration(false);
-//             setUser(firebaseUser);
-//           }
-//         } catch (err) {
-//           console.error("Error en AuthContext authenticate:", err);
-//           setUser(null);
-//         }
-//       } else {
-//         setUser(null);
-//       }
-//
-//       setLoading(false);
-//     });
-//
-//     return () => unsubscribe();
-//   }, []);
-//
-//   return (
-//     <AuthContext.Provider value={{ user, loading, needsRegistration }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
+// const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
-interface AuthContextType {
-  user: any;
+type AuthContextType = {
+  user: FirebaseUser | null;
   usuarioData: Usuario | null;
   loading: boolean;
   signOut: () => Promise<void>;
-}
+};
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  usuarioData: null,
+  loading: true,
+});
+
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
@@ -143,22 +47,38 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authClient, async (firebaseUser) => {
-      setUser(firebaseUser);
+      if(firebaseUser) {
+        setUser(firebaseUser);
 
-      if (firebaseUser?.email) {
-        const dbUser = await getUserByEmail(firebaseUser.email);
+        if (firebaseUser?.email) {
+          const dbUser = await getUserByEmail(firebaseUser.email);
 
-        if (dbUser) {
-          console.log("data user: ", dbUser)
-          setUsuarioData(dbUser); // usuario ya registrado en DB
+          if (dbUser) {
+            console.log("data Firebase user: ", dbUser)
+            setUsuarioData(dbUser); // usuario ya registrado en DB
+          } else {
+            setUsuarioData(null); // no existe en DB → debe ir a register
+          }
         } else {
-          setUsuarioData(null); // no existe en DB → debe ir a register
+          setUsuarioData(null);
         }
-      } else {
-        setUsuarioData(null);
-      }
 
-      setLoading(false);
+        setLoading(false);
+      } else {
+        // 1) Si no hay usuario de Firebase, revisar cookie con nuestro JWT
+        const userEmail = await getUserFromCookie();
+        // console.log(userEmail);
+        const dbUser = await getUserByEmail(userEmail);
+        if (dbUser) {
+          setUser(null); // no es Firebase
+          console.log("data Email Password user: ", dbUser)
+          setUsuarioData(dbUser);
+        } else {
+          setUser(null);
+          setUsuarioData(null);
+        }
+        setLoading(false);
+      }
     });
 
     return () => unsubscribe();
@@ -183,13 +103,6 @@ export const useAuth = () => {
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 };
-
-
-
-
-
-
-
 
 
 

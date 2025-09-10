@@ -8,11 +8,12 @@ export type Usuario = {
   id: number;
   displayname: string;
   email: string;
-  password: string;
+  // password: string;
+  rol: string;
   fecha_nacimiento: string;
-  firebase_uid: string;
-  comuna_id: number;
   photoURL: string;
+  comuna_id: number;
+  firebase_uid: string;
 }
 
 export type UsuarioAuth = {

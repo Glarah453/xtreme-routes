@@ -4,6 +4,7 @@ import '@/app/ui/auth/auth-form.css'
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { calculateAge } from '@/app/lib/utils';
 import { authenticate, registerUser } from "@/app/lib/actions";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { authClient } from "@/app/lib/firebase_Client";
@@ -81,7 +82,7 @@ export default function AuthForm() {
       setPrefill({ email: res.email });
       setActive(true);
     } else if (res?.success) {
-      router.push("/dashboard");
+      router.push("/");
     } else if (res?.error) {
       setError(res.error);
     }
@@ -121,17 +122,22 @@ export default function AuthForm() {
     for (const [key, value] of formData.entries()) {
       formValues[key] = value as string;
     }
-    console.log('Datos del formulario:', formValues);
 
-    // const res = await registerUser(undefined, formData);
-    //
-    // if (res.success) {
-    //   router.push("/");
-    // } else {
-    //   setError("Error registering user");
-    // }
-    //
+    const age = calculateAge(formValues.birthdate);
+    if (age < 15) {
+      setError('Debes tener al menos 15 años para registrarte');
+      return;
+    } else {
 
+      console.log('Datos del formulario:', formValues);
+      const res = await registerUser(undefined, formData);
+
+      if (res.success) {
+        router.push("/");
+      } else {
+        setError(res.error);
+      }
+    }
   };
 
   return (
@@ -243,6 +249,8 @@ export default function AuthForm() {
           <Button className="btn w-full">
             Register  <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
           </Button>
+          {/* {error && <p className="text-red-500 text-center mt-4 text-sm">{error}</p>} */}
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
       </div>
 

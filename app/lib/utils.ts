@@ -13,6 +13,26 @@ export function calculateAge(birthDate: string): number {
 }
 
 
+// Función para generar un color hexadecimal aleatorio
+export function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+export function getConsistentColor(input: string) {
+  const colors = ['FF5733', '33FF57', '5733FF', 'FF33A1', '33FFF5'];
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    hash = input.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+}
+
+
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
     style: 'currency',
