@@ -10,8 +10,12 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { authClient } from "@/app/lib/firebase_Client";
 import { Button } from "@/app/ui/button";
 
-
-import { fetchAllRegiones, fetchAllComunasByRegionID } from '@/app/lib/data'
+import { 
+  fetchAllRegiones, 
+  fetchAllComunasByRegionID,
+  getCheckUsernameForUser,
+  getCheckEmailForUser,
+} from '@/app/lib/data'
 
 
 
@@ -26,7 +30,12 @@ export default function AuthForm() {
   const [active, setActive] = useState(false); // false = login, true = register
   const [prefill, setPrefill] = useState<{ uid?: string; email?: string; name?: string; photoURL?: string }>({});
 
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [region, setRegion] = useState("");
+
+  const [errorUser, setErrorUser] = useState<string | null>(null);
+  const [errorEmail, setErrorEmail] = useState<string | null>(null);
 
   const [optionsRegiones, setOptionsRegiones] = useState([]);
   const [optionsComunas, setOptionsComunas] = useState([]);
@@ -71,7 +80,45 @@ export default function AuthForm() {
 
   }, [region]);
 
+  useEffect(() => {
+    if(!username) return;
+    
+    getCheckUsernameForUser(username)
+      .then((data) =>{
+        console.log(data);
+        if (data.exists === true){
+          // setErrorUser("El Username ya existe");
+          setError('El Username ya existe');
+        // }
+        } else {
+          // setErrorUser("");
+          setError(null);
+        }
+      })
+      .catch((error) => {
+        console.error('Error al obtener el check username:', error);
+      });
+  }, [username]);
 
+  useEffect(() => {
+    if(!email) return;
+    
+    getCheckEmailForUser(email)
+      .then((data) =>{
+        // console.log(data);
+        if (data.exists === true){
+          // setErrorEmail("El Email ya existe");
+          setError('El Email ya existe');
+        // } 
+        } else {
+          // setErrorEmail("");
+          setError(null);
+        }
+      }) 
+      .catch((error) => {
+        console.error('Error al obtener el check username:', error);
+      });
+  }, [email]);
 
 
   const handleLogin = async (formData: FormData) => {
@@ -180,20 +227,38 @@ export default function AuthForm() {
               name="name"
               placeholder="Username"
               defaultValue={prefill.name}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
             <i className="bx bxs-user"></i>
           </div>
+          {/* <div id="amount-error" aria-live="polite" aria-atomic="true"> */}
+          {/*   {errorUser && ( */}
+          {/*       <p className="mt-2 text-sm text-red-500"> */}
+          {/*         {errorUser} */}
+          {/*       </p> */}
+          {/*     )} */}
+          {/* </div> */}
           <div className="input-box-register">
             <input
               type="email"
               name="email"
               placeholder="Email"
               defaultValue={prefill.email}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
             <i className="bx bxs-envelope"></i>
           </div>
+          {/* <div id="amount-error" aria-live="polite" aria-atomic="true"> */}
+          {/*   {errorEmail && ( */}
+          {/*       <p className="mt-1 text-sm text-red-500"> */}
+          {/*         {errorEmail} */}
+          {/*       </p> */}
+          {/*     )} */}
+          {/* </div> */}
           <div className="input-box-register">
             <input
               type="date"

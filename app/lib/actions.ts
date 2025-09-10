@@ -342,14 +342,14 @@ export async function registerUser(_: unknown, formData: FormData) {
   // const redirectTo = (formData.get("redirectTo") as string) || "/dashboard";
   // const redirectTo = sanitizeRedirect(formData.get("redirectTo"));
 
-  if (
-    typeof nombre !== "string" ||
-    typeof email !== "string" ||
-    typeof fecha_nacimiento !== "string" ||
-    typeof comuna_id !== "string"
-  ) {
-    return "Datos de registro inválidos.";
-  }
+  // if (
+  //   typeof nombre !== "string" ||
+  //   typeof email !== "string" ||
+  //   typeof fecha_nacimiento !== "string" ||
+  //   typeof comuna_id !== "string"
+  // ) {
+  //   return "Datos de registro inválidos.";
+  // }
 
   try {
 

@@ -313,7 +313,7 @@ export async function registerUserDB(
 
   try {
     // 1) Crear usuario vía tu PROCEDURE (sin password)
-    await sql`
+     const result = await sql`
       CALL crear_usuario(
         ${nombre},
         ${email},
@@ -323,6 +323,8 @@ export async function registerUserDB(
         NULL
       );
     `;
+    console.log(result);
+    return result;
   } catch (err: any) {
     console.error("Error en registerUser:", err);
     // Si tu PROCEDURE lanza excepciones, aquí caerán.

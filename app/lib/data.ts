@@ -35,6 +35,32 @@ export async function getUserByEmail(email: string): Promise<Usuario | null> {
   }
 }
 
+export async function getCheckUsernameForUser(username: string) {
+  try {
+    const result = await sql`
+      SELECT EXISTS(SELECT 1 FROM usuarios WHERE displayname = ${username})
+    `;
+    const check_username = result[0];
+    return check_username;
+  } catch (err) {
+    console.error('Database Error: ', err);
+    throw new Error('Failed to check username');
+  }
+}
+
+export async function getCheckEmailForUser(email: string) {
+  try {
+    const result = await sql`
+      SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ${email})
+    `;
+    const check_email = result[0];
+    return check_email;
+  } catch (err) {
+    console.error('Database Error: ', err);
+    throw new Error('Failed to check email');
+  }
+}
+
 
 
 export async function fetchPostsMain() {
