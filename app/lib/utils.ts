@@ -1,7 +1,7 @@
 import { Revenue } from './definitions';
 
 // Función para calcular la edad a partir de la fecha de nacimiento
-export function calculateAge(birthDate: string): number {
+export async function calculateAge(birthDate: string): number {
   const today = new Date();
   const birth = new Date(birthDate);
   let age = today.getFullYear() - birth.getFullYear();

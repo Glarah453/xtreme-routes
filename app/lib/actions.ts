@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 // import { cookies } from 'next/headers';
 // import { signIn } from '@/auth';
-import { AuthError } from 'next-auth';
+// import { AuthError } from 'next-auth';
 import { authAdmin } from './firebase_Admin';
 // import { SignJWT } from "jose"; // para firmar el access_token con clave secreta propia
 import { 
@@ -16,7 +16,19 @@ import {
   deleteAccessTokenCookie,
 } from "@/app/lib/auth";
 
-import { getRandomColor, getConsistentColor } from '@/app/lib/utils';
+import { 
+  getRandomColor, 
+  getConsistentColor, 
+  calculateAge,
+} from '@/app/lib/utils';
+
+import { 
+  // fetchAllRegiones, 
+  // fetchAllComunasByRegionID,
+  getCheckUsernameForUser,
+  getCheckEmailForUser,
+} from '@/app/lib/data'
+
 
 import { 
   authenticateGoogleSignIn, 
@@ -185,50 +197,6 @@ export async function authenticate(_: unknown, formData: FormData) {
       if (!email) {
         return "Tu cuenta de Google no tiene email verificado.";
       }
-      //
-      // // 2) Buscar usuario en DB por email
-      // const result = await sql`
-      //   SELECT id, displayname, photoURL
-      //   FROM usuarios
-      //   WHERE email = ${email}
-      //   LIMIT 1
-      // `;
-      //
-      // // console.log("Busqueda de usuario: ", result);
-      //
-      // if (result.length === 0) {
-      // // if (result === null) {
-      //   // console.log("Usuario no existe")
-      //   // Usuario NO existe -> enviar a /register con prefill
-      //   return {
-      //     needsRegistration: true,
-      //     uid,
-      //     email,
-      //     name,
-      //     picture,
-      //     provider: "google",
-      //   }; // 🔥 no redirect aquí
-      // }
-      //
-      // const dbUser = result[0];
-      // const userId = Number(dbUser.id);
-      //
-      // const accessToken = await generateAccessToken({
-      //   uid: userId,
-      //   email,
-      //   name: (dbUser.displayname as string) || name || undefined,
-      //   picture: (dbUser.photoURL as string) || picture || undefined,
-      //   provider: "google",
-      // });
-      //
-      // // await crearSesionEnDB(userId, accessToken);
-      // await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
-      // await setAccessTokenCookie(accessToken);
-      //
-      // // 4) Redirigir
-      // // redirect(redirectTo);
-      // return { success: true };
-    
 
       // const result = await authenticateGoogleSignIn(formData);
       const result = await authenticateGoogleSignIn(uid, email, name, picture);
@@ -252,58 +220,10 @@ export async function authenticate(_: unknown, formData: FormData) {
       if (typeof email !== "string" || typeof password !== "string") {
         return "Parámetros inválidos.";
       }
-      //
-      // // 1) Buscar usuario
-      // const result = await sql`
-      //   SELECT id, password, displayname, photoURL
-      //   FROM usuarios
-      //   WHERE email = ${email}
-      //   LIMIT 1
-      // `;
-      //
-      // // console.log("Busqueda de usuario: ", result);
-      //
-      // if (result.length === 0) {
-      //   return { needsRegistration: true, email, provider: "password" };
-      // }
-      //
-      // const dbUser = result[0];
-      // const hash = dbUser.password as string | null;
-      //
-      // // if (!hash) {
-      // //   // El usuario existe pero no tiene password (ej: se registró con Google)
-      // //   return "Esta cuenta no tiene contraseña. Inicia sesión con Google.";
-      // // }
-      //
-      // const ok = await bcrypt.compare(password, hash);
-      // if (!ok) {
-      //   return "Credenciales inválidas.";
-      // }
-      //
-      // // 2) OK -> token, sesión, cookie
-      // const userId = dbUser.id;
-      // const name = dbUser.displayname as string | null;
-      // const picture = dbUser.photoURL as string | null;
-      //
-      // const accessToken = await generateAccessToken({
-      //   uid: userId,
-      //   email,
-      //   name: name || undefined,
-      //   picture: picture || undefined,
-      //   provider: "password",
-      // });
-      //
-      // // await crearSesionEnDB(userId, accessToken);
-      // await sql`CALL crear_sesion(${userId}, ${accessToken}, NULL);`;
-      // await setAccessTokenCookie(accessToken);
-      //
-      // // 3) Redirigir
-      // // redirect(redirectTo);
-      // return { success: true };
-
 
       // const result = await authenticateEmailPassword(formData);
       const result = await authenticateEmailPassword(email, password);
+
       if(result.success) {
         revalidatePath('/');
         // redirect('/');
@@ -350,9 +270,33 @@ export async function registerUser(_: unknown, formData: FormData) {
   // ) {
   //   return "Datos de registro inválidos.";
   // }
+  
+  
+
+  const check_user = await getCheckUsernameForUser(nombre);
+  // console.log("checkUser ",check_user);
+  if (check_user.exists === true) {
+    return { error: 'El username ya Existe.'};
+  }
+
+  const check_email = await getCheckEmailForUser(email);
+
+  if (check_email.exists === true) {
+    return { error: 'El Email ya se encuentra registrado.'};
+  }
+
+  const age = await calculateAge(fecha_nacimiento);
+  if (age < 15) {
+    return { error: 'Debes tener al menos 15 años para registrarte' };
+    // return;
+  }
+
+  if (age > 90) {
+    return { error: 'Debes tener menos de 90 años para registrarte' };
+    // return;
+  }
 
   try {
-
 
     const result = registerUserDB(uid, nombre, email, fecha_nacimiento, photoURL, comuna_id, password);
 

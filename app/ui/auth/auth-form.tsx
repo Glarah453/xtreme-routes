@@ -4,7 +4,7 @@ import '@/app/ui/auth/auth-form.css'
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { calculateAge } from '@/app/lib/utils';
+// import { calculateAge } from '@/app/lib/utils';
 import { authenticate, registerUser } from "@/app/lib/actions";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { authClient } from "@/app/lib/firebase_Client";
@@ -13,8 +13,6 @@ import { Button } from "@/app/ui/button";
 import { 
   fetchAllRegiones, 
   fetchAllComunasByRegionID,
-  getCheckUsernameForUser,
-  getCheckEmailForUser,
 } from '@/app/lib/data'
 
 
@@ -32,10 +30,13 @@ export default function AuthForm() {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [birthdate, setBirthdate] = useState("");
   const [region, setRegion] = useState("");
+  const [comuna, setComuna] = useState("");
+  // const [region, setRegion] = useState("");
 
-  const [errorUser, setErrorUser] = useState<string | null>(null);
-  const [errorEmail, setErrorEmail] = useState<string | null>(null);
+  // const [errorUser, setErrorUser] = useState<string | null>(null);
+  // const [errorEmail, setErrorEmail] = useState<string | null>(null);
 
   const [optionsRegiones, setOptionsRegiones] = useState([]);
   const [optionsComunas, setOptionsComunas] = useState([]);
@@ -79,46 +80,6 @@ export default function AuthForm() {
       });
 
   }, [region]);
-
-  useEffect(() => {
-    if(!username) return;
-    
-    getCheckUsernameForUser(username)
-      .then((data) =>{
-        console.log(data);
-        if (data.exists === true){
-          // setErrorUser("El Username ya existe");
-          setError('El Username ya existe');
-        // }
-        } else {
-          // setErrorUser("");
-          setError(null);
-        }
-      })
-      .catch((error) => {
-        console.error('Error al obtener el check username:', error);
-      });
-  }, [username]);
-
-  useEffect(() => {
-    if(!email) return;
-    
-    getCheckEmailForUser(email)
-      .then((data) =>{
-        // console.log(data);
-        if (data.exists === true){
-          // setErrorEmail("El Email ya existe");
-          setError('El Email ya existe');
-        // } 
-        } else {
-          // setErrorEmail("");
-          setError(null);
-        }
-      }) 
-      .catch((error) => {
-        console.error('Error al obtener el check username:', error);
-      });
-  }, [email]);
 
 
   const handleLogin = async (formData: FormData) => {
@@ -164,27 +125,31 @@ export default function AuthForm() {
     formData.append('uid', prefill.uid ?? "");
     formData.append('picture', prefill.photoURL ?? "");
 
-    // console.log(formData.entries)
-    const formValues: Record<string, string> = {};
-    for (const [key, value] of formData.entries()) {
-      formValues[key] = value as string;
+    // // console.log(formData.entries)
+    // const formValues: Record<string, string> = {};
+    // for (const [key, value] of formData.entries()) {
+    //   formValues[key] = value as string;
+    // }
+    //
+    // const age = calculateAge(formValues.birthdate);
+    // if (age < 15) {
+    //   setError('Debes tener al menos 15 años para registrarte');
+    //   // return;
+    // } 
+
+    // if (errorUser !== null && errorEmail !== null && error !== null) {
+
+      // console.log('Datos del formulario:', formValues);
+    const res = await registerUser(undefined, formData);
+
+    if (res?.success) {
+      router.push("/");
+    } else if (res?.error) {
+      setError(res.error);
     }
-
-    const age = calculateAge(formValues.birthdate);
-    if (age < 15) {
-      setError('Debes tener al menos 15 años para registrarte');
-      return;
-    } else {
-
-      console.log('Datos del formulario:', formValues);
-      const res = await registerUser(undefined, formData);
-
-      if (res.success) {
-        router.push("/");
-      } else {
-        setError(res.error);
-      }
-    }
+    // } else {
+    //   setError('No Debes tener Datos Erroneos');
+    // }
   };
 
   return (
@@ -194,12 +159,40 @@ export default function AuthForm() {
         <form action={handleLogin}>
           <h1>Login</h1>
           <div className="input-box">
-            <input type="email" name="email" placeholder="Email" required />
-            <i className="bx bxs-user"></i>
+            {/* <label */}
+            {/*   className="mb-3 mt-5 block text-xs font-medium text-gray-900" */}
+            {/*   htmlFor="email" */}
+            {/* > */}
+            {/*   Email */}
+            {/* </label> */}
+            <div className="input-container">
+              <input 
+                id="email"
+                type="email"
+                name="email"
+                // placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-container-input"
+                required
+              />
+              <label htmlFor="email" className="input-container-label">Email</label>
+              <i className="bx bxs-user"></i>
+            </div>
           </div>
           <div className="input-box">
-            <input type="password" name="password" placeholder="Password" required />
-            <i className="bx bxs-lock-alt"></i>
+            <div className="input-container">
+              <input 
+                id="password"
+                type="password" 
+                name="password" 
+                // placeholder="Password" 
+                className="input-container-input" 
+                required 
+              />
+              <label htmlFor="password" className="input-container-label">Password</label>
+              <i className="bx bxs-lock-alt"></i>
+            </div>
           </div>
           <Button className="btn w-full">
             Login <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
@@ -211,6 +204,7 @@ export default function AuthForm() {
             {/*   <i className="bx bxl-google"></i> */}
             {/* </button> */}
             <Button onClick={handleGoogleLogin} className="w-full bg-red-700 hover:bg-red-500">
+              <i className="bx bxl-google"></i>
               Sign in with Google <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
             </Button>
           </div>
@@ -222,16 +216,21 @@ export default function AuthForm() {
         <form action={handleRegister}>
           <h1>Registro de Usuario</h1>
           <div className="input-box-register">
-            <input
-              type="text"
-              name="name"
-              placeholder="Username"
-              defaultValue={prefill.name}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-            <i className="bx bxs-user"></i>
+            <div className="input-container">
+              <input
+                id="name"
+                type="text"
+                name="name"
+                // placeholder="Username"
+                defaultValue={prefill.name}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="input-container-input"
+                required
+              />
+              <label htmlFor="name" className="input-container-label">Username</label>
+              <i className="bx bxs-user"></i>
+            </div>
           </div>
           {/* <div id="amount-error" aria-live="polite" aria-atomic="true"> */}
           {/*   {errorUser && ( */}
@@ -241,16 +240,21 @@ export default function AuthForm() {
           {/*     )} */}
           {/* </div> */}
           <div className="input-box-register">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              defaultValue={prefill.email}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <i className="bx bxs-envelope"></i>
+            <div className="input-container">
+              <input
+                id="email"
+                type="email"
+                name="email"
+                // placeholder="Email"
+                defaultValue={prefill.email}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-container-input"
+                required
+              />
+              <label htmlFor="email" className="input-container-label">Email</label>
+              <i className="bx bxs-envelope"></i>
+            </div>
           </div>
           {/* <div id="amount-error" aria-live="polite" aria-atomic="true"> */}
           {/*   {errorEmail && ( */}
@@ -260,13 +264,20 @@ export default function AuthForm() {
           {/*     )} */}
           {/* </div> */}
           <div className="input-box-register">
-            <input
-              type="date"
-              name="birthdate"
-              placeholder="Fecha de Nacimiento"
-              // defaultValue={prefill.email}
-              required
-            />
+            <div className="input-container">
+              <input
+                id="birthdate"
+                type="date"
+                name="birthdate"
+                // placeholder="Fecha de Nacimiento"
+                // defaultValue={prefill.email}
+                value={birthdate}
+                onChange={(e) => setBirthdate(e.target.value)}
+                className="input-container-input"
+                required
+              />
+              {/* <label htmlFor="birthdate" className="input-container-label">Fecha de Nacimiento</label> */}
+            </div>
             <i className="bx bxs-cake"></i>
           </div>
           {/* <div className="input-box-register"> */}
@@ -280,6 +291,7 @@ export default function AuthForm() {
           {/*   <i className="bx bxs-image-alt"></i> */}
           {/* </div> */}
           <div className="input-box-register">
+            {/* <div className="input-container"> */}
             <select
               type="number"
               name="region"
@@ -292,14 +304,18 @@ export default function AuthForm() {
               <option value="">Selecciona una Región</option>
               {optionsRegiones}
             </select>
-            <i className="bx bxs-image-alt"></i>
+            {/* <i className="bx bxs-image-alt"></i> */}
+            <i className="bx bxs-map-pin"></i>
           </div>
           <div className="input-box-register">
+            {/* <div className="input-container"> */}
             <select
               type="number"
               name="comuna"
               placeholder="Comuna"
               // defaultValue={prefill.email}
+              value={comuna}
+              onChange={(e) => setComuna(e.target.value)}
               required
             >
               <option value="">Selecciona una Comuna</option>
@@ -308,14 +324,30 @@ export default function AuthForm() {
             <i className="bx bxs-map-pin"></i>
           </div>
           <div className="input-box-register">
-            <input type="password" name="password" placeholder="Password" minLength={6} required />
-            <i className="bx bxs-lock-alt"></i>
+            <div className="input-container">
+              <input
+                id="password"
+                type="password" 
+                name="password" 
+                // placeholder="Password" 
+                minLength={6} 
+                className="input-container-input"
+                required 
+              />
+            {/* <i className="bx bxs-lock-alt"></i> */}
+              <label htmlFor="password" className="input-container-label">Password</label>
+              <i className="bx bxs-user"></i>
+            </div>
           </div>
           <Button className="btn w-full">
             Register  <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
           </Button>
           {/* {error && <p className="text-red-500 text-center mt-4 text-sm">{error}</p>} */}
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          <div className="error-box">
+            {/* {errorUser && <p>{errorUser}</p>} */}
+            {/* {errorEmail && <p>{errorEmail}</p>} */}
+            {error && <p>{error}</p>}
+          </div>
         </form>
       </div>
 
@@ -327,6 +359,11 @@ export default function AuthForm() {
           <button type="button" onClick={() => setActive(true)} className="btn register-btn">
             Register
           </button>
+          {/* <div className="error-box"> */}
+          {/*   {errorUser && <p>{errorUser}</p>} */}
+          {/*   {errorEmail && <p>{errorEmail}</p>} */}
+          {/*   {error && <p>{error}</p>} */}
+          {/* </div> */}
         </div>
         <div className="toggle-panel toggle-right">
           <h1>Welcome Back!</h1>
@@ -334,6 +371,11 @@ export default function AuthForm() {
           <button type="button" onClick={() => setActive(false)} className="btn login-btn">
             Login
           </button>
+          {/* <div className="error-box"> */}
+          {/*   {errorUser && <p>{errorUser}</p>} */}
+          {/*   {errorEmail && <p>{errorEmail}</p>} */}
+          {/*   {error && <p>{error}</p>} */}
+          {/* </div> */}
         </div>
       </div>
     </div>

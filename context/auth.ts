@@ -245,7 +245,7 @@ export async function authenticateEmailPassword(
 
     const ok = await bcrypt.compare(password, hash);
     if (!ok) {
-      return "Credenciales inválidas.";
+      return { error: "Credenciales inválidas." };
     }
 
     // 2) OK -> token, sesión, cookie
@@ -323,7 +323,7 @@ export async function registerUserDB(
         NULL
       );
     `;
-    console.log(result);
+    // console.log(result);
     return result;
   } catch (err: any) {
     console.error("Error en registerUser:", err);
