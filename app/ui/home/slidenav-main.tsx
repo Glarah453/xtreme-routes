@@ -55,8 +55,8 @@ export default function SideNavMain() {
   }
 
   return (
-    // <div className="flex h-full flex-col bg-white px-3 py-4 md:px-2">
-    <aside className="lg:w-1/6 bg-white p-4 rounded-md shadow-md">
+    <div className="flex h-full flex-col bg-white px-3 py-4 md:px-2">
+    {/* <aside className="lg:w-1/6 bg-white p-4 rounded-md shadow-md"> */}
       <Link
         className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4 md:h-40"
         href="/"
@@ -81,7 +81,7 @@ export default function SideNavMain() {
           </button>
         </form>
         ) : (
-        <Link
+          <Link
              href="/auth"
              // className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
              className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-blue-500 p-3 text-white font-medium hover:bg-blue-400 hover:text-white-500 md:flex-none md:text-base md:justify-start md:p-2 md:px-3"
@@ -93,7 +93,7 @@ export default function SideNavMain() {
         )
         }
       </div>
-    {/* </div> */}
-    </aside>
+    </div>
+    // </aside>
   );
 }
