@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { lusitana } from '@/app/ui/fonts';
 import SideNavMain from '@/app/ui/home/slidenav-main.tsx';
+import ImagesPosted from '@/app/ui/posts/images-main.tsx';
+import SectorsInfo from '@/app/ui/posts/sectors-info.tsx';
+import RoutesInfo from '@/app/ui/posts/routes-info.tsx';
+import RatingsReviews from '@/app/ui/posts/ratings-reviews.tsx';
 import { Metadata } from 'next';
 
 import { 
@@ -60,32 +64,34 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
               {/*   así el footer se vea al final. */}
               {/* </p> */}
               <h1>Pagina de posts {id}</h1>
-              <div className="p-2 m-2">
-                <h2 className="font-medium mb-2">Info Post</h2>
-                {postInfo.map((post) => (
-                  <div key={post.id}>
-                    <h1 className="font-medium mb-2">{post.titulo}</h1>
-                    
-                    <div className="p-2 m-2">
-                      <div className="grid grid-cols-6 grid-rows-4 gap-4">
-                        <div className="col-span-4 row-span-4 bg-gray-100">1</div>
-                        <div className="col-span-2 row-span-2 col-start-5 bg-gray-100">2</div>
-                        <div className="col-span-2 row-span-2 col-start-5 row-start-3 bg-gray-100">3</div>
-                      </div>
-                    </div>
-                    <div className="p-2 m-2">
-                      <div className="grid grid-cols-6 grid-rows-4 gap-4">
-                        <div className="col-span-3 row-span-4 bg-gray-100">
-                          1
-                          <h4>{post.contenido}</h4>
-                        </div>
-                        <div className="col-span-2 col-start-5 bg-gray-100">2</div>
-                        <div className="col-span-2 row-span-3 col-start-5 row-start-2 bg-gray-100">3</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <ImagesPosted postInfo={postInfo} />
+
+              {/* <div className="p-2 m-2"> */}
+              {/*   <h2 className="font-medium mb-2">Info Post</h2> */}
+              {/*   {postInfo.map((post) => ( */}
+              {/*     <div key={post.id}> */}
+              {/*       <h1 className="font-medium mb-2">{post.titulo}</h1> */}
+              {/**/}
+              {/*       <div className="p-2 m-2"> */}
+              {/*         <div className="grid grid-cols-6 grid-rows-4 gap-4"> */}
+              {/*           <div className="col-span-4 row-span-4 bg-gray-100">1</div> */}
+              {/*           <div className="col-span-2 row-span-2 col-start-5 bg-gray-100">2</div> */}
+              {/*           <div className="col-span-2 row-span-2 col-start-5 row-start-3 bg-gray-100">3</div> */}
+              {/*         </div> */}
+              {/*       </div> */}
+              {/*       <div className="p-2 m-2"> */}
+              {/*         <div className="grid grid-cols-6 grid-rows-4 gap-4"> */}
+              {/*           <div className="col-span-3 row-span-4 bg-gray-100"> */}
+              {/*             1 */}
+              {/*             <h4>{post.contenido}</h4> */}
+              {/*           </div> */}
+              {/*           <div className="col-span-2 col-start-5 bg-gray-100">2</div> */}
+              {/*           <div className="col-span-2 row-span-3 col-start-5 row-start-2 bg-gray-100">3</div> */}
+              {/*         </div> */}
+              {/*       </div> */}
+              {/*     </div> */}
+              {/*   ))} */}
+              {/* </div> */}
               {/* <div className="h-96 mt-4 bg-gray-200 rounded-md flex items-center justify-center"> */}
               {/*   Bloque de ejemplo (para simular contenido largo) */}
               {/* </div> */}
@@ -106,45 +112,51 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
               {/* <SectionContent /> */}
 
               <div className="p-2 m-2">
-                <div className="p-2 m-2">
-                  <div className="grid grid-cols-6 grid-rows-6 gap-4">
-                    <div className="col-span-3 row-span-6 bg-gray-100">
-                      1
-                      <h1>Sectores del Post</h1>
-                      {sectorInfoByPost.map((sector) => (
-                        <div key={sector.id}>
-                          <h2>{sector.nombre}</h2>
-                          <h3>{sector.descripcion}</h3>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="col-span-3 row-span-6 col-start-4 bg-gray-100">2</div>
-                  </div>
-                  
-                </div>
-                <div className="p-2 m-2">
-                  <div className="grid grid-cols-6 grid-rows-6 gap-4">
-                    <div className="col-span-4 row-span-6 bg-gray-100">
-                      3
-                    </div>
-                    <div className="col-span-2 row-span-6 col-start-5 bg-gray-100">
-                      4
-                      <h2>Rutas del Post</h2>
-                      {routesInfoByPost.map((ruta) => (
-                        <div key={ruta.id}>
-                          <h3>{ruta.nombre}</h3>
-                          <h4>{ruta.descripcion}</h4>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="p-2 m-2">
-                  <div className="grid grid-cols-6 grid-rows-8 gap-4">
-                    <div className="col-span-2 row-span-5 bg-gray-100">5</div>
-                    <div className="col-span-4 row-span-8 col-start-3 bg-gray-100">6</div>
-                  </div>
-                </div>
+                <SectorsInfo sectorInfoByPost={sectorInfoByPost} />
+                {/* <div className="p-2 m-2"> */}
+                {/*   <div className="grid grid-cols-6 grid-rows-6 gap-4"> */}
+                {/*     <div className="col-span-3 row-span-6 bg-gray-100"> */}
+                {/*       1 */}
+                {/*       <h1>Sectores del Post</h1> */}
+                {/*       {sectorInfoByPost.map((sector) => ( */}
+                {/*         <div key={sector.id}> */}
+                {/*           <h2>{sector.nombre}</h2> */}
+                {/*           <h3>{sector.descripcion}</h3> */}
+                {/*         </div> */}
+                {/*       ))} */}
+                {/*     </div> */}
+                {/*     <div className="col-span-3 row-span-6 col-start-4 bg-gray-100">2</div> */}
+                {/*   </div> */}
+                {/* </div> */}
+
+
+                <RoutesInfo routesInfoByPost={routesInfoByPost} />
+                {/* <div className="p-2 m-2"> */}
+                {/*   <div className="grid grid-cols-6 grid-rows-6 gap-4"> */}
+                {/*     <div className="col-span-4 row-span-6 bg-gray-100"> */}
+                {/*       3 */}
+                {/*     </div> */}
+                {/*     <div className="col-span-2 row-span-6 col-start-5 bg-gray-100"> */}
+                {/*       4 */}
+                {/*       <h2>Rutas del Post</h2> */}
+                {/*       {routesInfoByPost.map((ruta) => ( */}
+                {/*         <div key={ruta.id}> */}
+                {/*           <h3>{ruta.nombre}</h3> */}
+                {/*           <h4>{ruta.descripcion}</h4> */}
+                {/*         </div> */}
+                {/*       ))} */}
+                {/*     </div> */}
+                {/*   </div> */}
+                {/* </div> */}
+
+
+                <RatingsReviews />
+                {/* <div className="p-2 m-2"> */}
+                {/*   <div className="grid grid-cols-6 grid-rows-8 gap-4"> */}
+                {/*     <div className="col-span-2 row-span-5 bg-gray-100">5</div> */}
+                {/*     <div className="col-span-4 row-span-8 col-start-3 bg-gray-100">6</div> */}
+                {/*   </div> */}
+                {/* </div> */}
               </div>
             </main>
           </div>
