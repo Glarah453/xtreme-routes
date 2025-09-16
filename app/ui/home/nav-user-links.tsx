@@ -9,22 +9,25 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
-// Map of links to display in the side navigation.
-// Depending on the size of the application, this would be stored in a database.
-const links = [
-  { name: 'Home', href: '/', icon: HomeIcon },
-  // { name: 'Perfil', href: '/dashboard', icon: HomeIcon },
-  {
-    name: 'Invoices',
-    href: '/dashboard/invoices',
-    icon: DocumentDuplicateIcon,
-  },
-  { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
-  { name: 'Crear Post', href: '/posts/create', icon: UserGroupIcon },
-];
 
-export default function NavLinks() {
+
+export default function NavLinksUser({ id }: { id: string }) {
   const pathname = usePathname();
+
+  // Map of links to display in the side navigation.
+  // Depending on the size of the application, this would be stored in a database.
+  const links = [
+    { name: 'Home', href: '/', icon: HomeIcon },
+    { name: 'Perfil', href: `/profile/${id}`, icon: HomeIcon },
+    {
+      name: 'Invoices',
+      href: '/dashboard/invoices',
+      icon: DocumentDuplicateIcon,
+    },
+    { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
+    { name: 'Crear Post', href: '/posts/create', icon: UserGroupIcon },
+  ];
+
 
   return (
     <>
