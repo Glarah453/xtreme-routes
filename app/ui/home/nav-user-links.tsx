@@ -2,7 +2,9 @@
 
 import {
   UserGroupIcon,
+  UserCircleIcon,
   HomeIcon,
+  DocumentPlusIcon,
   DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -18,14 +20,14 @@ export default function NavLinksUser({ id }: { id: string }) {
   // Depending on the size of the application, this would be stored in a database.
   const links = [
     { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Perfil', href: `/profile/${id}`, icon: HomeIcon },
+    // { name: 'Perfil', href: `/profile/${id}`, icon: UserCircleIcon },
     {
       name: 'Invoices',
       href: '/dashboard/invoices',
       icon: DocumentDuplicateIcon,
     },
     { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
-    { name: 'Crear Post', href: '/posts/create', icon: UserGroupIcon },
+    { name: 'Crear Post', href: '/posts/create', icon: DocumentPlusIcon },
   ];
 
 

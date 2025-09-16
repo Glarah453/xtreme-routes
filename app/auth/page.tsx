@@ -1,4 +1,3 @@
-
 import AuthForm from '@/app/ui/auth/auth-form.tsx';
 
 import { Suspense } from 'react';
@@ -20,4 +19,3 @@ export default function AuthPage() {
     </main>
   );
 }
-
