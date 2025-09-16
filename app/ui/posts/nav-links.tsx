@@ -11,20 +11,40 @@ import clsx from 'clsx';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
-const links = [
-  { name: 'Home', href: '/', icon: HomeIcon },
-  { name: 'Perfil', href: '/dashboard', icon: HomeIcon },
-  {
-    name: 'Invoices',
-    href: '/dashboard/invoices',
-    icon: DocumentDuplicateIcon,
-  },
-  { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
-  { name: 'Crear Post', href: '/posts/create', icon: UserGroupIcon },
-];
+// const links = [
+//   { name: 'Home', href: '/', icon: HomeIcon },
+//   {
+//     name: 'Sectores',
+//     href: '/posts/sectors',
+//     icon: DocumentDuplicateIcon,
+//   },
+//   {
+//     name: 'Rutas',
+//     href: '/posts/sectores',
+//     icon: DocumentDuplicateIcon,
+//   },
+//   { name: 'Crear Post', href: '/posts/create', icon: UserGroupIcon },
+// ];
 
-export default function NavLinks() {
+export default function NavLinks({ id }: { id: string }) {
   const pathname = usePathname();
+
+  const links = [
+    { name: 'Home', href: '/', icon: HomeIcon },
+    {
+      name: 'Sectores',
+      href: `/posts/sectors/${id}`,
+      icon: DocumentDuplicateIcon,
+    },
+    {
+      name: 'Rutas',
+      href: `/posts/routes/${id}`,
+      icon: DocumentDuplicateIcon,
+    },
+    // { name: 'Crear Post', href: '/posts/create', icon: UserGroupIcon },
+    { name: 'Crear Sector', href: `/posts/sectors/${id}/create`, icon: UserGroupIcon },
+    { name: 'Crear Ruta', href: `/posts/routes/${id}/create`, icon: UserGroupIcon },
+  ];
 
   return (
     <>
