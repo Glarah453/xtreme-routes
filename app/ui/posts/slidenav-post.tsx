@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import NavLinks from '@/app/ui/posts/nav-links';
+import UserMenu from '@/app/ui/user-menu';
 import AcmeLogo from '@/app/ui/acme-logo';
 import { PowerIcon,ArrowRightIcon } from '@heroicons/react/24/outline';
 // import { ArrowRightIcon } from '@heroicons/react/24/outline';
@@ -68,29 +69,31 @@ export default function SideNavPost({ id }: { id: string }) {
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks id={id} />
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
-        {user || usuarioData ? ( <form
-          action={handleSignOut}
-          // action={async () => {
-          //   'use server';
-          //   await signOut({ redirectTo: '/' });
-          // }}
-        >
-          <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            <PowerIcon className="w-6" />
-            <div className="hidden md:block">Sign Out</div>
-          </button>
-        </form>
-        ) : (
-          <Link
-             href="/auth"
-             // className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-             className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-blue-500 p-3 text-white font-medium hover:bg-blue-400 hover:text-white-500 md:flex-none md:text-base md:justify-start md:p-2 md:px-3"
-              
-           >
-             <span>Sign In</span> <ArrowRightIcon className="ml-auto w-6 text-gray-50" />
-           </Link>
-
-        )
+            {/* <form */}
+            {/*   action={handleSignOut} */}
+            {/*   // action={async () => { */}
+            {/*   //   'use server'; */}
+            {/*   //   await signOut({ redirectTo: '/' }); */}
+            {/*   // }} */}
+            {/* > */}
+            {/*   <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"> */}
+            {/*     <PowerIcon className="w-6" /> */}
+            {/*     <div className="hidden md:block">Sign Out</div> */}
+            {/*   </button> */}
+            {/* </form> */}
+        {user || usuarioData ? 
+          ( 
+            <UserMenu />
+          ) : (
+            <Link
+               href="/auth"
+               // className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+               className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-blue-500 p-3 text-white font-medium hover:bg-blue-400 hover:text-white-500 md:flex-none md:text-base md:justify-start md:p-2 md:px-3"
+                
+             >
+              <span>Sign In</span> <ArrowRightIcon className="ml-auto w-6 text-gray-50" />
+            </Link>
+          )
         }
       </div>
     </div>

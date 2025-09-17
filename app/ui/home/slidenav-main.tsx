@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import NavLinks from '@/app/ui/home/nav-links';
-import NavLinksUser from '@/app/ui/home/nav-user-links';
+// import NavLinksUser from '@/app/ui/home/nav-user-links';
 import UserMenu from '@/app/ui/user-menu';
 import AcmeLogo from '@/app/ui/acme-logo';
 import { PowerIcon,ArrowRightIcon } from '@heroicons/react/24/outline';
@@ -50,11 +50,11 @@ export default function SideNavMain() {
     router.push("/");
   };  
 
-  if (loading) {
-    return (
-      <div className="p-4 text-sm text-gray-500">Cargando...</div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="p-4 text-sm text-gray-500">Cargando...</div>
+  //   );
+  // }
 
   return (
     <div className="flex h-full flex-col bg-white px-3 py-4 md:px-2">
@@ -100,13 +100,14 @@ export default function SideNavMain() {
             {/* </form> */}
         {user || usuarioData ? 
           (
-            
             <UserMenu />
           ) : (
             <Link
                href="/auth"
                // className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-               className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-blue-500 p-3 text-white font-medium hover:bg-blue-400 hover:text-white-500 md:flex-none md:text-base md:justify-start md:p-2 md:px-3"
+               className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md
+                        bg-blue-500 p-3 text-white font-medium hover:bg-blue-400 hover:text-white-500
+                        md:flex-none md:text-base md:justify-start md:p-2 md:px-3"
                 
             >
               <span>Sign In</span> <ArrowRightIcon className="ml-auto w-6 text-gray-50" />

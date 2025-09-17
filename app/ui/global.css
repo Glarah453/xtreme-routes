@@ -21,6 +21,21 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
+
+/* @import '~leaflet/dist/leaflet.css'; */
+
+/* Fix para iconos en SSR */
+@layer components {
+  .leaflet-container img.leaflet-tile {
+    display: block;
+  }
+  .leaflet-container .leaflet-control a {
+    background: #fff;
+    background: linear-gradient(to bottom, #fff, #f7f7f7);
+  }
+}
+
+
 /* .perspective { */
 /*   perspective: 1000px; */
 /* } */
