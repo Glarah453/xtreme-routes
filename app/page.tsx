@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { lusitana } from '@/app/ui/fonts';
 // import Image from 'next/image';
+import Header from '@/app/ui/header-bar';
 import SideNavMain from '@/app/ui/home/slidenav-main.tsx';
 // import PostGrid from '@/app/ui/home/posts-main.tsx';
 // import PostsCarousel from "@/app/ui/home/posts-main.tsx";
@@ -44,9 +45,10 @@ export default async function Page() {
       <div className="flex-grow p-6 bg-gray-200 md:overflow-y-auto md:p-8">
         <div className="flex flex-col min-h-screen">
           {/* Header */}
-          <header className="bg-white p-4 shadow-md rounded-md m-2">
-            <h1 className="text-lg font-semibold">Header</h1>
-          </header>
+          <Header />
+          {/* <header className="bg-white p-4 shadow-md rounded-md m-2"> */}
+          {/*   <h1 className="text-lg font-semibold">Header</h1> */}
+          {/* </header> */}
 
           {/* Main */}
           <div className="flex flex-1 flex-col lg:flex-row gap-2 m-2">

@@ -1,6 +1,9 @@
 @import "swiper/css";
 @import "swiper/css/navigation";
 
+@import "leaflet/dist/leaflet.css";
+
+
 
 @tailwind base;
 @tailwind components;
@@ -22,7 +25,6 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 
-/* @import '~leaflet/dist/leaflet.css'; */
 
 /* Fix para iconos en SSR */
 @layer components {
