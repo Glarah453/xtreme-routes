@@ -2,6 +2,8 @@
 "use client";
 
 import { useState } from "react";
+import SelectRegionComuna from '@/app/ui/posts/create/selects-form';
+import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
 
 const steps = [
   { id: 1, title: "Información del post" },
@@ -17,6 +19,38 @@ export default function MultiStepForm() {
     sectores: { nombre: "", detalles: "" },
     rutas: { nombre: "", distancia: "" },
   });
+
+  const [mapCenter, setMapCenter] = useState([-35.426944, -71.665556]); // Coordenadas de Santiago, Chile
+  const [region, setRegion] = useState("");
+  const [comuna, setComuna] = useState("");
+
+  const [coordx, setCoordx] = useState();
+  const [coordy, setCoordy] = useState();
+
+
+  const handleSelectRegionComunaChange = (valores) => {
+    // console.log(valores)
+    // setIDpost( valores.id_post);
+    // setId_ct(valores.id_ct);
+    // setId_Sb_Ct(valores.id_sb_ct);
+    // setId_dfct(valores.id_dfct);
+    setRegion(valores.region);
+    setComuna(valores.comuna);
+    // console.log(id_post, id_ct, id_sb_ct, id_dfct, id_region, id_comuna)
+  }
+
+  const handleMapCenterChange = (valor) => {
+    setMapCenter(valor)
+  }
+
+  const handleCoords = (valor) => {
+    const { lat, lng } = valor;
+    setCoordx(lat);
+    setCoordy(lng);
+    console.log("new_post_coord:", valor)
+  }
+
+
 
   const handleChange = (section: string, field: string, value: string) => {
     setFormData((prev) => ({
@@ -59,6 +93,18 @@ export default function MultiStepForm() {
                 className="mt-1 block w-full border rounded p-2"
               />
             </label>
+            <div>
+              <SelectRegionComuna 
+                onMapCenterChange={handleMapCenterChange} 
+                onSelectChange={handleSelectRegionComunaChange} 
+              />
+            </div>
+            <div>
+              <MapFormPost 
+                mapCenter={mapCenter} 
+                coords={handleCoords} 
+              />
+            </div>
           </div>
         );
       case 2:

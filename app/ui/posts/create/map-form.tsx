@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import LocationIconMap from '@/public/icons/location.png';
 // import LocationIcon from '../assets/img/location.png'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { useMapEvents } from 'react-leaflet/hooks'
 // import { MapContainer, TileLayer, Marker, Popup,  FeatureGroup } from 'react-leaflet'
 // import "leaflet/dist/leaflet.css";
 import L  from 'leaflet';
@@ -12,7 +13,10 @@ import L  from 'leaflet';
 
 // import "leaflet/dist/leaflet.css";
 const customIcon = new L.Icon({
-    iconUrl: LocationIconMap,  // Ruta a tu imagen de ícono personalizado
+    // iconUrl: LocationIconMap,  // Ruta a tu imagen de ícono personalizado
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
     iconSize: [20, 25],  // Tamaño del ícono
     iconAnchor: [16, 32],  // Punto de anclaje del ícono
     popupAnchor: [0, -32],  // Punto de anclaje del popup
@@ -29,7 +33,14 @@ const customIcon = new L.Icon({
 //
 
 // export default async function MapForm() {
-export default function MapFormPost() {
+// export default function MapFormPost() {
+export default function MapFormPost({
+  mapCenter,
+  coords,
+}: {
+  mapCenter: number;
+  coords: number;
+}) {
 
   const coordenates = [-35.44, -71.66];
   // const coordenates = {
@@ -37,7 +48,7 @@ export default function MapFormPost() {
   // };
 
   // const [clickedPosition, setClickedPosition] = useState(null);
-  const [clickedPosition, setClickedPosition] = useState<[number, number] | null>(null);
+  const [coordsPosition, setCoordsPosition] = useState<[number, number] | null>(null);
   const [position, setPosition] = useState<[number, number] | null>(null);
   // 
   // const handleMapClick = (e) => {
@@ -54,12 +65,31 @@ export default function MapFormPost() {
   //   // setClickedPosition({ lat, lng });
   // }, [coordenates])
 
+   const MapClickHandler = ({ onClick }) => {
+    const map = useMapEvents({
+      click: (e) => {
+        onClick(e);
+        map.locate();
+      },
+    });
+
+    return null;
+  };
+
+
+  const handleMapClick = (e) => {
+    const { lat, lng } = e.latlng;
+    coords({ lat, lng })
+    setCoordsPosition({ lat, lng });
+  };
+
   console.log(coordenates)
   
   return (
     <div>      
       <MapContainer 
-        center={coordenates} 
+        key={`${mapCenter[0]}-${mapCenter[1]}`}
+        center={mapCenter} 
         zoom={12} 
         style={{ height: '600px', width: '400px' }}
       >
@@ -85,8 +115,9 @@ export default function MapFormPost() {
         {/* </FeatureGroup> */}
          
         
-        {clickedPosition && (
-          <Marker position={clickedPosition} icon={customIcon}>
+        <MapClickHandler onClick={handleMapClick} />
+        {coordsPosition && (
+          <Marker position={coordsPosition} icon={customIcon}>
             {/* <Popup>Coordenadas: {clickedPosition.lat}, {clickedPosition.lng}</Popup> */}
             <Popup>Tu punto seleccionado</Popup>
           </Marker>

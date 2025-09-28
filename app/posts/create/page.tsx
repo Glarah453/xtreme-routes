@@ -5,7 +5,7 @@ import { lusitana } from '@/app/ui/fonts';
 // import SideNavMain from '@/app/ui/home/slidenav-main.tsx';
 import MultiStepForm from '@/app/ui/posts/create/multi-step-form';
 import SideNavPost from '@/app/ui/posts/slidenav-post.tsx';
-import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
+// import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
 
 
 export default async function Page() {
@@ -39,16 +39,16 @@ export default async function Page() {
               <div className="p-2 m-2">
                 {/* <SectorsInfo sectorInfoByPost={sectorInfoByPost} /> */}
                 
-                <MapFormPost />
+                {/* <MapFormPost /> */}
 
                 {/* <RoutesInfo routesInfoByPost={routesInfoByPost} /> */}
                 
 
+                <MultiStepForm />
 
                 {/* <RatingsReviews /> */}
                 
               </div>
-              <MultiStepForm />
             </main>
           </div>
 

@@ -13,7 +13,7 @@ import { Button } from "@/app/ui/button";
 import { 
   fetchAllRegiones, 
   fetchAllComunasByRegionID,
-} from '@/app/lib/data'
+} from '@/app/lib/data';
 
 
 
