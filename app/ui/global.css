@@ -27,11 +27,27 @@ input[type='number']::-webkit-outer-spin-button {
 
 
 /* Fix para iconos en SSR */
+/* @layer components { */
+/*   .leaflet-container img.leaflet-tile { */
+/*     display: block; */
+/*   } */
+/*   .leaflet-container .leaflet-control a { */
+/*     background: #fff; */
+/*     background: linear-gradient(to bottom, #fff, #f7f7f7); */
+/*   } */
+/* } */
+/**/
+
+/* Fix para iconos por defecto en SSR */
 @layer components {
   .leaflet-container img.leaflet-tile {
     display: block;
   }
   .leaflet-container .leaflet-control a {
+    background: #fff;
+    background: linear-gradient(to bottom, #fff, #f7f7f7);
+  }
+  .leaflet-container .leaflet-control-attribution {
     background: #fff;
     background: linear-gradient(to bottom, #fff, #f7f7f7);
   }

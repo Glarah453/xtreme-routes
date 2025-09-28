@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import LocationIconMap from '@/public/icons/location.png';
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 
 // Ícono personalizado para los marcadores
 const customIcon = new L.Icon({
-  iconUrl: "/marker-icon.png", // puedes usar el de leaflet o uno tuyo
+  iconUrl: LocationIconMap, // puedes usar el de leaflet o uno tuyo
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
