@@ -1,20 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import LocationIconMap from '@/public/icons/location.png';
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
+import dynamic from "next/dynamic";
 
-// Ícono personalizado para los marcadores
-const customIcon = new L.Icon({
-  // iconUrl: LocationIconMap, // puedes usar el de leaflet o uno tuyo
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
+
 
 type Route = {
   id: number;
@@ -27,8 +16,12 @@ type Route = {
   image: string;
 };
 
-export default function RoutesPage() {
-  const [position, setPosition] = useState<[number, number] | null>(null);
+const MapViews = dynamic(() => import("@/app/ui/maps/map-view"), {
+  ssr: false, // 👈 esto evita que intente renderizar en el servidor
+});
+
+export default function Page() {
+  const [positionUser, setPositionUser] = useState<[number, number] | null>(null);
 
   // Rutas de ejemplo
   const routes: Route[] = [
@@ -58,7 +51,7 @@ export default function RoutesPage() {
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos) => {
-        setPosition([pos.coords.latitude, pos.coords.longitude]);
+        setPositionUser([pos.coords.latitude, pos.coords.longitude]);
       });
     }
   }, []);
@@ -107,34 +100,8 @@ export default function RoutesPage() {
 
       {/* Mapa */}
       <div className="flex-1">
-        {position && (
-          <MapContainer
-            center={position}
-            zoom={12}
-            style={{ width: "100%", height: "100%" }}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/">OSM</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+        <MapViews routesAll={routes} positionUser={positionUser} />
 
-            {/* Marcador del usuario */}
-            <Marker position={position} icon={customIcon}>
-              <Popup>Tu ubicación</Popup>
-            </Marker>
-
-            {/* Marcadores de rutas */}
-            {routes.map((route) => (
-              <Marker key={route.id} position={route.coords} icon={customIcon}>
-                <Popup>
-                  <b>{route.name}</b>
-                  <br />
-                  {route.difficulty} - {route.distance}
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        )}
       </div>
     </div>
   );

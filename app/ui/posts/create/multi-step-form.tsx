@@ -2,8 +2,9 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import SelectRegionComuna from '@/app/ui/posts/create/selects-form';
-import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
+// import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
 
 const steps = [
   { id: 1, title: "Información del post" },
@@ -11,6 +12,10 @@ const steps = [
   { id: 3, title: "Información de rutas" },
   { id: 4, title: "Revisión" },
 ];
+
+const MapFormPost = dynamic(() => import("@/app/ui/posts/create/mappost-form"), {
+  ssr: false, // 👈 esto evita que intente renderizar en el servidor
+});
 
 export default function MultiStepForm() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -24,8 +29,8 @@ export default function MultiStepForm() {
   // const [region, setRegion] = useState("");
   const [comuna, setComuna] = useState("");
 
-  const [coordx, setCoordx] = useState();
-  const [coordy, setCoordy] = useState();
+  const [coordPostX, setCoordPostX] = useState();
+  const [coordPostY, setCoordPostY] = useState();
 
 
   const handleSelectRegionComunaChange = (valor) => {
@@ -48,10 +53,10 @@ export default function MultiStepForm() {
   
   console.log("mapCenter: ", mapCenter);
 
-  const handleCoords = (valor) => {
+  const handleCoordsPosted = (valor) => {
     const { lat, lng } = valor;
-    setCoordx(lat);
-    setCoordy(lng);
+    setCoordPostY(lat);
+    setCoordPostX(lng);
     console.log("new_post_coord:", valor)
   }
 
@@ -107,7 +112,7 @@ export default function MultiStepForm() {
             <div>
               <MapFormPost 
                 mapCenter={mapCenter} 
-                coords={handleCoords} 
+                coords={handleCoordsPosted} 
               />
             </div>
           </div>

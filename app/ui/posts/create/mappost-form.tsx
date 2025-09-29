@@ -11,7 +11,9 @@ import L  from 'leaflet';
 // import 'leaflet-draw/dist/leaflet.draw.css';
 // import { EditControl } from 'react-leaflet-draw';
 
-// import "leaflet/dist/leaflet.css";
+import "leaflet/dist/leaflet.css";
+
+
 const customIcon = new L.Icon({
     // iconUrl: LocationIconMap,  // Ruta a tu imagen de ícono personalizado
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -37,20 +39,7 @@ export default function MapFormPost({
   // const [clickedPosition, setClickedPosition] = useState(null);
   const [coordsPosition, setCoordsPosition] = useState<[number, number] | null>(null);
   const [position, setPosition] = useState<[number, number] | null>(null);
-  // 
-  // const handleMapClick = (e) => {
-  //   const { lat, lng } = e.latlng;
-  //   setClickedPosition({ lat, lng });
-  // }; 
-  
-  // useEffect(() => {
-  //   if(!coordenates) return;
-  //   setClickedPosition(coordenates);
-  //   // setClickedPosition(JSON.stringify({ lat: coordenates[0], lng: coordenates[1]}));
-  //   // setClickedPosition(coordenates);
-  //   // const { lat, lng } = coordenates;
-  //   // setClickedPosition({ lat, lng });
-  // }, [coordenates])
+
 
    const MapClickHandler = ({ onClick }) => {
     const map = useMapEvents({
