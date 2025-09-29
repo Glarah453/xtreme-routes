@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useAuth } from '@/context/AuthContext';
 import SelectRegionComuna from '@/app/ui/posts/create/selects-form';
 // import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
 
@@ -18,12 +19,16 @@ const MapFormPost = dynamic(() => import("@/app/ui/posts/create/mappost-form"), 
 });
 
 export default function MultiStepForm() {
+
+  const { usuarioData } = useAuth();
+  if (!usuarioData) return null;
+
+  const userID = usuarioData.id;
+
+  console.log("dataUser: ", userID);
+
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    post: { titulo: "", descripcion: "" },
-    sectores: { nombre: "", detalles: "" },
-    rutas: { nombre: "", distancia: "" },
-  });
+
 
   const [mapCenter, setMapCenter] = useState([-35.426944, -71.665556]); // Coordenadas de Santiago, Chile
   // const [region, setRegion] = useState("");
@@ -31,6 +36,19 @@ export default function MultiStepForm() {
 
   const [coordPostX, setCoordPostX] = useState();
   const [coordPostY, setCoordPostY] = useState();
+
+  const [formData, setFormData] = useState({
+    post: { 
+      titulo: "",
+      contenido: "", 
+      comuna_id: comuna, 
+      // usuario_id: usuarioData.id, 
+      latitud: coordPostX, 
+      longitud: coordPostY 
+    },
+    sectores: { nombre: "", detalles: "" },
+    rutas: { nombre: "", distancia: "" },
+  });
 
 
   const handleSelectRegionComunaChange = (valor) => {
@@ -109,12 +127,13 @@ export default function MultiStepForm() {
                 onSelectChange={handleSelectRegionComunaChange} 
               />
             </div>
-            <div>
+            <label className="block">
+              <span className="text-sm font-medium">Ubicación de la Publicación</span>
               <MapFormPost 
                 mapCenter={mapCenter} 
                 coords={handleCoordsPosted} 
               />
-            </div>
+            </label>
           </div>
         );
       case 2:

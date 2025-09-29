@@ -100,53 +100,53 @@ export default function SelectRegionComuna({
 
   return (
     <>
-      <div className="field email-field">
-        <div className="input-field">
-          <select
-            type="number"
-            name="region"
-            placeholder="Region"
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-            // defaultValue={prefill.photoURL}
-            required
-          >
-            <option value="">Selecciona una Región</option>
-            {optionsRegiones}
-          </select>
-          {/* <i className="bx bxs-image-alt"></i> */}
-          <i className="bx bxs-map-pin"></i>
-        </div>
-        {/* {errorIdregion && */}
-        {/*   <span className="error email-error"> */}
-        {/*     <i className="bx bx-error-circle error-icon"></i> */}
-        {/*     <p className="error-text">El campo de Region no puede estar vacio</p> */}
-        {/*   </span> */}
-        {/* } */}
-      </div>
-      <div className="field email-field">
-        <div className="input-field">
-          <select
-            type="number"
-            name="comuna"
-            placeholder="Comuna"
-            // defaultValue={prefill.email}
-            value={comuna}
-            onChange={(e) => setComuna(e.target.value)}
-            required
-          >
-            <option value="">Selecciona una Comuna</option>
-            {optionsComunas}
-          </select>
-          <i className="bx bxs-map-pin"></i>
-        </div>
-        {/* {errorIdcomuna && */}
-        {/*   <span className="error email-error"> */}
-        {/*     <i className="bx bx-error-circle error-icon"></i> */}
-        {/*     <p className="error-text">El campo de Comuna no puede estar vacio</p> */}
-        {/*   </span> */}
-        {/* } */}
-      </div>
+      <label className="block">
+        <span className="text-sm font-medium">Región</span>
+        <select
+          type="number"
+          name="region"
+          placeholder="Region"
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          // defaultValue={prefill.photoURL}
+          className="mt-1 block w-full border rounded p-2"
+          required
+        >
+          <option value="">Selecciona una Región</option>
+          {optionsRegiones}
+        </select>
+        {/* <i className="bx bxs-image-alt"></i> */}
+        <i className="bx bxs-map-pin"></i>
+      </label>
+      {/* {errorIdregion && */}
+      {/*   <span className="error email-error"> */}
+      {/*     <i className="bx bx-error-circle error-icon"></i> */}
+      {/*     <p className="error-text">El campo de Region no puede estar vacio</p> */}
+      {/*   </span> */}
+      {/* } */}
+      <label className="block">
+        <span className="text-sm font-medium">Comuna</span>
+        <select
+          type="number"
+          name="comuna"
+          placeholder="Comuna"
+          // defaultValue={prefill.email}
+          value={comuna}
+          onChange={(e) => setComuna(e.target.value)}
+          className="mt-1 block w-full border rounded p-2"
+          required
+        >
+          <option value="">Selecciona una Comuna</option>
+          {optionsComunas}
+        </select>
+        <i className="bx bxs-map-pin"></i>
+      </label>
+      {/* {errorIdcomuna && */}
+      {/*   <span className="error email-error"> */}
+      {/*     <i className="bx bx-error-circle error-icon"></i> */}
+      {/*     <p className="error-text">El campo de Comuna no puede estar vacio</p> */}
+      {/*   </span> */}
+      {/* } */}
     </>
   );
 }

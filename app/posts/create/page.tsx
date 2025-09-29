@@ -1,14 +1,22 @@
-// 'use server';
+'use client';
 
 import Link from 'next/link';
 import { lusitana } from '@/app/ui/fonts';
 // import SideNavMain from '@/app/ui/home/slidenav-main.tsx';
+// import { useAuth } from '@/context/AuthContext';
 import MultiStepForm from '@/app/ui/posts/create/multi-step-form';
 import SideNavPost from '@/app/ui/posts/slidenav-post.tsx';
 // import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
 
 
-export default async function Page() {
+// export default async function Page() {
+export default function Page() {
+  // const { usuarioData } = useAuth();
+  // if (!usuarioData) return null;
+  //
+  // const userID = usuarioData.id;
+  //
+  // console.log("dataUser: ", userID);
 
   const id = 1;
 

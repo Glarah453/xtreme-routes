@@ -6,10 +6,6 @@ import LocationIconMap from '@/public/icons/location.png';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
 import L  from 'leaflet';
-// import { MapContainer, TileLayer, Marker, Popup,  FeatureGroup } from 'react-leaflet'
-// import "leaflet/dist/leaflet.css";
-// import 'leaflet-draw/dist/leaflet.draw.css';
-// import { EditControl } from 'react-leaflet-draw';
 
 import "leaflet/dist/leaflet.css";
 
@@ -62,7 +58,7 @@ export default function MapFormPost({
   // console.log(coordenates)
   
   return (
-    <div>      
+    <div className="mt-1 block w-full border rounded p-2">      
       <MapContainer 
         // key={`${mapCenter[0]}-${mapCenter[1]}`}
         center={mapCenter} 
@@ -74,22 +70,6 @@ export default function MapFormPost({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {/* <FeatureGroup> */}
-        {/*    <EditControl */}
-        {/*     position='topright' */}
-        {/*     // onCreated={handleCreated} */}
-        {/*     draw={{ */}
-        {/*       marker: { */}
-        {/*         icon: customIcon, // Use the default marker icon */}
-        {/*       }, */}
-        {/*       rectangle: false, */}
-        {/*       circle: false, */}
-        {/*       circlemarker: false, */}
-        {/*       polyline: false, */}
-        {/*     }} */}
-        {/*   /> */}
-        {/* </FeatureGroup> */}
-         
         
         <MapClickHandler onClick={handleMapClick} />
         {coordsPosition && (

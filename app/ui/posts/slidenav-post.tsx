@@ -23,13 +23,13 @@ export default function SideNavPost({ id }: { id: string }) {
   //   router.push('/');
   // };
 
-  if(!user || !usuarioData){
-    console.log("datos Null: ", user, usuarioData, loading)
-  } else {
-    console.log("datos process: ...........");
-    console.log("user: ", user);
-    console.log("usuarioData: ", usuarioData)
-  }
+  // if(!user || !usuarioData){
+  //   console.log("datos Null: ", user, usuarioData, loading)
+  // } else {
+  //   console.log("datos process: ...........");
+  //   console.log("user: ", user);
+  //   console.log("usuarioData: ", usuarioData)
+  // }
   // console.log("datos: ",  user, usuarioData, loading, sign_out);
   // console.log(usuarioData);
 

@@ -64,7 +64,7 @@ export default function UserMenu() {
               <Menu.Item>
                 {({ active }) => (
                   <Link
-                    href="/profile"
+                    href={`/profile/${usuarioData.id}`}
                     // className={`block rounded-md px-4 py-2 text-sm ${
                     className={`flex h-[48px] w-full grow items-center justify-center gap-2 
                       rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 

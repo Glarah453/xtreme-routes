@@ -1,6 +1,7 @@
 'use client';
 
 import RoutesAllInfoByPost from '@/app/lib/definitions';
+// import LocationIconMap from '../../icons/location.png';
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 
@@ -15,6 +16,15 @@ const customIcon = new L.Icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
 });
+
+const userIcon = new L.Icon({
+  iconUrl: '../icons/location.png',
+  // iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+})
 
 
 export default function MapViews({ 
@@ -41,7 +51,7 @@ export default function MapViews({
 
         {/* Marcador del usuario */}
         {positionUser && (
-          <Marker position={positionUser} icon={customIcon}>
+          <Marker position={positionUser} icon={userIcon}>
             <Popup>Tu ubicación</Popup>
           </Marker>
         )}
