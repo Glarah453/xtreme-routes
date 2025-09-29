@@ -21,27 +21,32 @@ export default function MultiStepForm() {
   });
 
   const [mapCenter, setMapCenter] = useState([-35.426944, -71.665556]); // Coordenadas de Santiago, Chile
-  const [region, setRegion] = useState("");
+  // const [region, setRegion] = useState("");
   const [comuna, setComuna] = useState("");
 
   const [coordx, setCoordx] = useState();
   const [coordy, setCoordy] = useState();
 
 
-  const handleSelectRegionComunaChange = (valores) => {
+  const handleSelectRegionComunaChange = (valor) => {
     // console.log(valores)
     // setIDpost( valores.id_post);
     // setId_ct(valores.id_ct);
     // setId_Sb_Ct(valores.id_sb_ct);
     // setId_dfct(valores.id_dfct);
-    setRegion(valores.region);
-    setComuna(valores.comuna);
+    // setRegion(valores.region);
+    setComuna(valor);
     // console.log(id_post, id_ct, id_sb_ct, id_dfct, id_region, id_comuna)
   }
 
   const handleMapCenterChange = (valor) => {
     setMapCenter(valor)
   }
+
+  // console.log("region: ", region);
+  console.log("comuna: ", comuna);
+  
+  console.log("mapCenter: ", mapCenter);
 
   const handleCoords = (valor) => {
     const { lat, lng } = valor;

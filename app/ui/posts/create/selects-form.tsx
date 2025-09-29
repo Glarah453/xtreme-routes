@@ -12,18 +12,19 @@ export default function SelectRegionComuna({
   onMapCenterChange, 
   onSelectChange,
 }: {
-  onMapCenterChange: number, 
-    onSelectChange: number
+  onMapCenterChange: number[], 
+  onSelectChange: number,
 }){
   // const [options1, setOptions1] = useState([]);
   // const [options2, setOptions2] = useState([]);
 
-  const [mapCenter, setMapCenter] = useState([-35.426944, -71.665556]); // Coordenadas de Santiago, Chile  
+  // const [mapCenter, setMapCenter] = useState([]); // Coordenadas de Santiago, Chile  
   
   // const [id_region, setID_region] = useState();
   // const [id_comuna, setID_comuna] = useState();
 
   const [region, setRegion] = useState("");
+  const [regiones, setRegiones] = useState("");
   const [comuna, setComuna] = useState("");
 
   const [optionsRegiones, setOptionsRegiones] = useState([]);
@@ -41,6 +42,7 @@ export default function SelectRegionComuna({
         ));
 
         setOptionsRegiones(mappedOptions);
+        setRegiones(data);
       })
       .catch((error) => {
         console.error('Error al obtener los datos del primer select:', error);
@@ -69,15 +71,29 @@ export default function SelectRegionComuna({
 
   }, [region]);
 
+  // console.log("regiones: ", regiones);
+  // console.log("region id: ", region);
+
   useEffect(() => {
-    if (mapCenter){
-      onMapCenterChange(mapCenter)
+    if (region){
+      const dataRegion = regiones[region-1]
+      // console.log("data Region: ", dataRegion);
+    
+      // console.log("coordenadas: ", dataRegion.latitud, dataRegion.longitud);
+      // setMapCenter([dataRegion.latitud, dataRegion.longitud]);
+      // console.log(mapCenter);
+      onMapCenterChange([dataRegion.latitud, dataRegion.longitud])
+    } else {
+      return;
     }
-  }, [mapCenter]);
+  }, [regiones, region]);
+
+  // console.log("mapCenter: ", mapCenter);
 
   useEffect(() => {
     if ( region && comuna ) {
-      onSelectChange({ region, comuna })
+      // onSelectChange({ region, comuna })
+      onSelectChange(comuna)
     }
   }, [region, comuna]);
 
