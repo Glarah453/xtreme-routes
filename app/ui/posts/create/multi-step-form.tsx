@@ -5,6 +5,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 // import { useAuth } from '@/context/AuthContext';
 import SelectRegionComuna from '@/app/ui/posts/create/select-location-form';
+import SelectCategoriaPost from '@/app/ui/posts/create/select-type-form';
 // import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
 
 const steps = [
@@ -33,6 +34,7 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
   const [mapCenter, setMapCenter] = useState([-35.426944, -71.665556]); // Coordenadas de Santiago, Chile
   // const [region, setRegion] = useState("");
   const [comuna, setComuna] = useState("");
+  const [categoriasPost, setCategoriasPost] = useState<number[]>([]);
 
   const [coordPostX, setCoordPostX] = useState(null);
   const [coordPostY, setCoordPostY] = useState(null);
@@ -43,6 +45,7 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
       descripcion: "", 
       comuna_id: comuna, 
       usuario_id: idUser, 
+      categorias: categoriasPost,
       latitud: coordPostX, 
       longitud: coordPostY 
     },
@@ -52,14 +55,11 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
 
 
   const handleSelectRegionComunaChange = (valor) => {
-    // console.log(valores)
-    // setIDpost( valores.id_post);
-    // setId_ct(valores.id_ct);
-    // setId_Sb_Ct(valores.id_sb_ct);
-    // setId_dfct(valores.id_dfct);
-    // setRegion(valores.region);
     setComuna(valor);
-    // console.log(id_post, id_ct, id_sb_ct, id_dfct, id_region, id_comuna)
+  }
+
+  const handleSelectCategoriaChange = (valor) => {
+    setCategoriasPost(valor)
   }
 
   const handleMapCenterChange = (valor) => {
@@ -68,6 +68,8 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
 
   // console.log("region: ", region);
   console.log("comuna: ", comuna);
+
+  console.log("categorias post: ", categoriasPost);
   
   console.log("mapCenter: ", mapCenter);
 
@@ -125,6 +127,12 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
               <SelectRegionComuna 
                 onMapCenterChange={handleMapCenterChange} 
                 onSelectChange={handleSelectRegionComunaChange} 
+              />
+            </div>
+            <div>
+              <SelectCategoriaPost
+                onCategorias={categoriasPost}
+                onSelectCatChange={handleSelectCategoriaChange}
               />
             </div>
             <label className="block">

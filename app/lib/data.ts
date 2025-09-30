@@ -262,7 +262,7 @@ export async function fetchAllComunasByRegionID(id: string){
 }
 
 
-export async function fetchAllCategories() {
+export async function fetchAllCategorias() {
   try {
     const dataCategorias = await sql<Categorias[]>`
       select * from categorias

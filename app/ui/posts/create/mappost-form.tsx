@@ -15,9 +15,9 @@ const customIcon = new L.Icon({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    iconSize: [20, 25],  // Tamaño del ícono
+    iconSize: [25, 40],  // Tamaño del ícono
     iconAnchor: [16, 32],  // Punto de anclaje del ícono
-    popupAnchor: [0, -32],  // Punto de anclaje del popup
+    popupAnchor: [0, -30],  // Punto de anclaje del popup
   });
 
 
