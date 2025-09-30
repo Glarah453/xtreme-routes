@@ -3,19 +3,26 @@
 import Link from 'next/link';
 import { lusitana } from '@/app/ui/fonts';
 // import SideNavMain from '@/app/ui/home/slidenav-main.tsx';
-// import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import MultiStepForm from '@/app/ui/posts/create/multi-step-form';
 import SideNavPost from '@/app/ui/posts/slidenav-post.tsx';
 // import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
-
+// import { Metadata } from 'next';
+//
+//
+// export const metadata: Metadata = {
+//   title: 'Create Post',
+// };
+ 
 
 // export default async function Page() {
 export default function Page() {
-  // const { usuarioData } = useAuth();
-  // if (!usuarioData) return null;
-  //
-  // const userID = usuarioData.id;
-  //
+  
+  const { usuarioData } = useAuth();
+  if (!usuarioData) return null;
+
+  const userID = usuarioData.id;
+
   // console.log("dataUser: ", userID);
 
   const id = 1;
@@ -52,7 +59,7 @@ export default function Page() {
                 {/* <RoutesInfo routesInfoByPost={routesInfoByPost} /> */}
                 
 
-                <MultiStepForm />
+                <MultiStepForm idUser={userID} />
 
                 {/* <RatingsReviews /> */}
                 

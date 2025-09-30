@@ -28,12 +28,14 @@ export type UsuarioAuth = {
 export type Regiones = {
   id: number;
   nombre: string;
+  latitud: number;
+  longitud: number
 }
 
 export type Comunas = {
   id: number;
   nombre: string;
-  // region_id: number;
+  region_id: number;
 }
 
 
@@ -72,10 +74,39 @@ export type PostAllInfo = {
 
 export type SectorAllInfoByPost = {
   id: number;
+  nombre: string;
+  descripcion: string;
+  image: string;
+  latitud: number;
+  longitud: number;
 }
 
 export type RoutesAllInfoByPost = {
   id: number;
+  nombre: string;
+  descripcion: string;
+  distancia: string;
+  desnivel_acumulado: string;
+  es_personalizado: string;
+  privacidad: string;
+}
+
+export type Categorias = {
+  id: number;
+  nombre: string;
+}
+
+export type Subcategorias = {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  categoria_id: number;
+}
+
+export type Dificultades = {
+  id: number;
+  nombre: string;
+  sistema: string;
 }
 
 

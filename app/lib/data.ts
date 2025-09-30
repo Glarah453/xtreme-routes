@@ -15,6 +15,9 @@ import {
   RoutesAllInfoByPost,
   Regiones,
   Comunas,
+  Categorias,
+  Subcategorias,
+  Dificultades,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -256,6 +259,48 @@ export async function fetchAllComunasByRegionID(id: string){
     console.error('Database Error', error);
     throw new Error('Falied to fetch Comunas by RegionID');
   } 
+}
+
+
+export async function fetchAllCategories() {
+  try {
+    const dataCategorias = await sql<Categorias[]>`
+      select * from categorias
+    `;
+    return dataCategorias;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Failed to fetch Categories data');
+  }
+}
+
+export async function fetchAllSubcategoriasByCategoriaID(id: string) {
+  try {
+    const dataSubcategorias = await sql<Subcategorias[]>`
+      select * from subcategorias where categoria_id = ${id}
+    `;
+
+    return dataSubcategorias;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Failed to fetch Subcategorias data');
+  }
+}
+
+
+export async function fetchAllDificultadesBySubcategoriasID(id: string) {
+  try {
+    const dataDificultades = await sql<Dificultades[]>`
+      SELECT d.* FROM dificultad d
+        JOIN subcategoria_dificultad sd ON d.id = sd.dificultad_id
+        WHERE sd.subcategoria_id = ${id};
+    `;
+
+    return dataDificultades;
+  } catch (error) {
+    console.error('Database Error', error);
+    throw new Error('Failed to fetch Dificulades data');
+  }
 }
 
 

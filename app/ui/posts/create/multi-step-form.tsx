@@ -3,8 +3,8 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { useAuth } from '@/context/AuthContext';
-import SelectRegionComuna from '@/app/ui/posts/create/selects-form';
+// import { useAuth } from '@/context/AuthContext';
+import SelectRegionComuna from '@/app/ui/posts/create/select-location-form';
 // import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
 
 const steps = [
@@ -18,14 +18,14 @@ const MapFormPost = dynamic(() => import("@/app/ui/posts/create/mappost-form"), 
   ssr: false, // 👈 esto evita que intente renderizar en el servidor
 });
 
-export default function MultiStepForm() {
+export default function MultiStepForm({ idUser }: { idUser: number }) {
 
-  const { usuarioData } = useAuth();
-  if (!usuarioData) return null;
-
-  const userID = usuarioData.id;
-
-  console.log("dataUser: ", userID);
+  // const { usuarioData } = useAuth();
+  // if (!usuarioData) return null;
+  //
+  // const userID = usuarioData.id;
+  //
+  console.log("dataUser: ", idUser);
 
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -34,15 +34,15 @@ export default function MultiStepForm() {
   // const [region, setRegion] = useState("");
   const [comuna, setComuna] = useState("");
 
-  const [coordPostX, setCoordPostX] = useState();
-  const [coordPostY, setCoordPostY] = useState();
+  const [coordPostX, setCoordPostX] = useState(null);
+  const [coordPostY, setCoordPostY] = useState(null);
 
   const [formData, setFormData] = useState({
     post: { 
       titulo: "",
-      contenido: "", 
+      descripcion: "", 
       comuna_id: comuna, 
-      // usuario_id: usuarioData.id, 
+      usuario_id: idUser, 
       latitud: coordPostX, 
       longitud: coordPostY 
     },
