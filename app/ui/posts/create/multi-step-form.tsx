@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 // import { useAuth } from '@/context/AuthContext';
 import SelectRegionComuna from '@/app/ui/posts/create/select-location-form';
 import SelectCategoriaPost from '@/app/ui/posts/create/select-type-form';
+import SelectCategoriaSubCategoriaRoutes from '@/app/ui/posts/create/select-type2-form';
 // import MapFormPost from '@/app/ui/posts/create/map-form.tsx';
 
 const steps = [
@@ -32,12 +33,22 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
 
 
   const [mapCenter, setMapCenter] = useState([-35.426944, -71.665556]); // Coordenadas de Santiago, Chile
+
+  // data post
   // const [region, setRegion] = useState("");
   const [comuna, setComuna] = useState("");
   const [categoriasPost, setCategoriasPost] = useState<number[]>([]);
 
   const [coordPostX, setCoordPostX] = useState(null);
   const [coordPostY, setCoordPostY] = useState(null);
+
+
+  //data sectores
+
+
+  // data rutas
+  const [categoriaRuta, setCategoriaRuta] = useState<number[]>([]);
+  const [subcategoriasRuta, setSubCategoriasRuta] = useState<number[]>([]);
 
   const [formData, setFormData] = useState({
     post: { 
@@ -53,17 +64,25 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
     rutas: { nombre: "", distancia: "" },
   });
 
+   const handleMapCenterChange = (valor) => {
+    setMapCenter(valor)
+  }
+
 
   const handleSelectRegionComunaChange = (valor) => {
     setComuna(valor);
   }
 
-  const handleSelectCategoriaChange = (valor) => {
+  const handleSelectCategoriasPostChange = (valor) => {
     setCategoriasPost(valor)
   }
 
-  const handleMapCenterChange = (valor) => {
-    setMapCenter(valor)
+  const handlSelectCategoriaRouteChange = (valor) => {
+    setCategoriaRuta(valor)
+  }
+
+   const handlSelectSubCategoriasRouteChange = (valor) => {
+    setSubCategoriasRuta(valor)
   }
 
   // console.log("region: ", region);
@@ -80,7 +99,8 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
     console.log("new_post_coord:", valor)
   }
 
-
+  console.log("ruta categoria: ", categoriaRuta);
+  console.log("rutas subcategoria: ", subcategoriasRuta);
 
   const handleChange = (section: string, field: string, value: string) => {
     setFormData((prev) => ({
@@ -132,7 +152,7 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
             <div>
               <SelectCategoriaPost
                 onCategorias={categoriasPost}
-                onSelectCatChange={handleSelectCategoriaChange}
+                onSelectCatChange={handleSelectCategoriasPostChange}
               />
             </div>
             <label className="block">
@@ -195,6 +215,12 @@ export default function MultiStepForm({ idUser }: { idUser: number }) {
                 className="mt-1 block w-full border rounded p-2"
               />
             </label>
+            <SelectCategoriaSubCategoriaRoutes
+              onSubCategorias={subcategoriasRuta}
+              onSelectCatChange={handlSelectCategoriaRouteChange}
+              onSelectSubCatChange={handlSelectSubCategoriasRouteChange}
+              
+            />
           </div>
         );
       case 4:

@@ -274,7 +274,7 @@ export async function fetchAllCategorias() {
   }
 }
 
-export async function fetchAllSubcategoriasByCategoriaID(id: string) {
+export async function fetchAllSubcategoriasByCategoriaID(id: number) {
   try {
     const dataSubcategorias = await sql<Subcategorias[]>`
       select * from subcategorias where categoria_id = ${id}

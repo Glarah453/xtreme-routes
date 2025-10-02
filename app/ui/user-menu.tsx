@@ -16,6 +16,7 @@ export default function UserMenu() {
   const router = useRouter();
 
   if (!usuarioData) return null;
+  console.log(usuarioData);
 
   return (
     <div className="relative flex items-center space-x-2 p-2">

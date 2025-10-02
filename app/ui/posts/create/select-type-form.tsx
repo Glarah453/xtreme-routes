@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { Categorias } from '@/app/lib/definitions';
+import { Categorias, Subcategorias } from '@/app/lib/definitions';
 import {
   fetchAllCategorias,
-  fetchAllSubcategoriasByCategoriaID,
+  // fetchAllSubcategoriasByCategoriaID,
 } from '@/app/lib/data';
 
 
@@ -96,3 +96,9 @@ export default function SelectCategoriaPost({
     </div>
   );
 }
+
+
+
+
+
+
